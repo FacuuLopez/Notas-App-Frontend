@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View, ImageBackground } from 'react-native';
 import React from 'react';
-import { colorTema1 } from '../utils/colors';
-import notaPapel from '../../assets/imagenes/notaPapel.png';
+import { colorTema1 } from '../../utils/colors';
+import notaPapel from '../../../assets/imagenes/notaPapel.png';
 
 const Nota = ({ nota }) => {
     const lorem = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolor aspernatur ad vitae tempore voluptates eaque molestiae. Nostrum quo nesciunt deserunt ullam delectus! Ad at nemo amet consequuntur blanditiis aut! '

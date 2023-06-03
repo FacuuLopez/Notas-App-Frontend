@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NativeRouter, Route, Routes } from 'react-router-native';
-import Loggin from './src/loggin/loggin.component';
-import Contenedor from './src/contenedor/contenedor';
-import Nota from './src/nota/nota.component';
-import NotaEditar from './src/nota-editar/nota-editar.component';
+import Contenedor from './src/pages/contenedor/contenedor';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useEffect } from 'react';
+import Nota from './src/pages/nota/nota.component';
+import Loggin from './src/pages/Login/Login.component';
+import NotaEditar from './src/pages/nota-editar/nota-editar.component';
 
 export default function App() {
 
