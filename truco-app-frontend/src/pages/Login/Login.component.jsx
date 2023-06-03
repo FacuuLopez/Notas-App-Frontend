@@ -1,5 +1,5 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
-import logginStyles from "./login.styles";
+import logginStyles from "./Login.styles";
 import { useState } from "react";
 import { Link } from "react-router-native";
 
