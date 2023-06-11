@@ -1,14 +1,17 @@
-import { StyleSheet, InputTextInput, View } from 'react-native'
+import { StyleSheet ,Text, TouchableOpacity, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
+import { colorTema1 } from '../../utils/colors';
 
-const NotaEditar = (nota) => {
-    const { imagen = '', descripcion = '', titulo = '' } = nota;
+const NotaEditar = ({nota}) => {
+    const colores = colorTema1;
+
+    const {descripcion = '', titulo = '' } = nota;
 
     const [nuevoTitulo, setNuevoTitulo] = useState(titulo);
-    const [nuevaDescripcion, setNuevaDescrepcion] = useState(nuevaDescripcion);
+    const [nuevaDescripcion, setNuevaDescrepcion] = useState(descripcion);
 
     const onChangeTitulo = (titulo) => setNuevoTitulo(titulo);
-    const onChangeDescripcion = (descripcion) = setNuevaDescrepcion(descripcion)
+    const onChangeDescripcion = (descripcion) => setNuevaDescrepcion(descripcion)
     const guardarNota = () => {
 
     }
@@ -16,20 +19,22 @@ const NotaEditar = (nota) => {
     return (
         <View style={notaEditarStyles.contenedor}>
             <View style={notaEditarStyles.titulo}>
-                <Text>
+                <Text style={notaEditarStyles.label}>
                     Nuevo titulo
                 </Text>
-                <InputText style={notaEditarStyles.tituloInputTexto}>
-                    {titulo}
-                </InputText>
+                <TextInput style={notaEditarStyles.tituloInputTexto} onChangeText={onChangeTitulo}>
+                    {nuevoTitulo}
+                </TextInput>
             </View>
             <View style={notaEditarStyles.descripcion}>
-                <Text>
+                <Text style={notaEditarStyles.label}>
                     Nueva descripcion
                 </Text>
-                <InputText style={notaEditarStyles.descripcionInputTexto}>
-                    {descripcion}
-                </InputText>
+                <TextInput style={notaEditarStyles.descripcionInputTexto}
+                 onChangeText={onChangeDescripcion}
+                 multiline>
+                    {nuevaDescripcion}
+                </TextInput>
             </View>
             <TouchableOpacity style={notaEditarStyles.botonContenedor} onPress={guardarNota} activeOpacity={0.6}>
                 <Text style={notaEditarStyles.boton}>Guardar Cambios</Text>
@@ -45,7 +50,10 @@ const notaEditarStyles = StyleSheet.create({
         flex: 1
     },
     label:{
-
+        marginBottom:3,
+        marginTop:15,
+        fontSize:16,
+        fontWeight:'bold'
     },
     titulo: {
        
@@ -55,13 +63,20 @@ const notaEditarStyles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth:2,
         borderRadius:3,
-        padding:3,
-        textAlign:'center'
+        padding:8,
+        textAlign:'center',
+        fontSize:20,
+        fontWeight:'bold',
     },
     descripcion: {
-
+        flex:1,
     },
     descripcionInputTexto: {
+        flex:1,
+        paddingVertical:10,
+        paddingHorizontal:10,
+        fontSize:16,
+        textAlignVertical: "top",
         placeholder:'nueva descripcion',
         backgroundColor: 'white',
         borderWidth:2,
@@ -69,9 +84,15 @@ const notaEditarStyles = StyleSheet.create({
         padding:3,
     },
     botonContenedor: {
-
+        marginTop:25,
+        padding:7,
+        backgroundColor: colorTema1.primary,
+        alignSelf:'center',
+        borderRadius:5,
     },
     boton: {
-
+        color: colorTema1.light,
+        textTransform:'uppercase',
+        fontSize:22,
     }
 })
