@@ -21,7 +21,7 @@ export default function App() {
     <NativeRouter>
       <Routes>
         <Route path={'/'} element={<Contenedor />} >
-          <Route index element={<NotaEditar nota={{}} />} />
+          <Route index element={<Nota nota={{}} />} />
           <Route path='loggin' element={<Loggin esRegistro={false} />} />
           <Route path='registro' element={<Loggin esRegistro={true} />} />
           <Route path='nota' element={<Nota />} />

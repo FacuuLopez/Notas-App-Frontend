@@ -39,9 +39,13 @@ const Nota = ({ nota }) => {
         },
         descripcion: {
             flex: 3,
-            marginBottom: 15
+            marginBottom: 15,
+            backgroundColor:'white',
+            borderRadius:5,
+            borderWidth:1,
         },
         descripcionTexto: {
+            paddingVertical:5,
             color: colores.dark,
             fontSize: 20,
             paddingHorizontal: 10
