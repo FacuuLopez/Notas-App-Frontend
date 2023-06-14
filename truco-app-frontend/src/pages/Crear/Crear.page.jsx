@@ -19,19 +19,14 @@ const NotaEditar = ({nota}) => {
     return (
         <View style={notaEditarStyles.contenedor}>
             <View style={notaEditarStyles.titulo}>
-                <Text style={notaEditarStyles.label}>
-                    Nuevo titulo
-                </Text>
-                <TextInput style={notaEditarStyles.tituloInputTexto} onChangeText={onChangeTitulo}>
+                <TextInput style={notaEditarStyles.tituloInputTexto} onChangeText={onChangeTitulo} placeholder="Titulo">
                     {nuevoTitulo}
                 </TextInput>
             </View>
             <View style={notaEditarStyles.descripcion}>
-                <Text style={notaEditarStyles.label}>
-                    Nueva descripcion
-                </Text>
                 <TextInput style={notaEditarStyles.descripcionInputTexto}
                  onChangeText={onChangeDescripcion}
+                 placeholder="Descripcion"
                  multiline>
                     {nuevaDescripcion}
                 </TextInput>
@@ -56,7 +51,7 @@ const notaEditarStyles = StyleSheet.create({
         fontWeight:'bold'
     },
     titulo: {
-       
+        marginBottom:3
     },
     tituloInputTexto: {
         placeholder:'nuevo titulo',
@@ -73,7 +68,7 @@ const notaEditarStyles = StyleSheet.create({
     },
     descripcionInputTexto: {
         flex:1,
-        paddingVertical:10,
+        paddingVertical:20,
         paddingHorizontal:10,
         fontSize:16,
         textAlignVertical: "top",

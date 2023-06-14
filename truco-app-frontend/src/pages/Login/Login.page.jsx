@@ -4,11 +4,14 @@ import { useState } from "react";
 import { Link } from "react-router-native";
 
 const Loggin = ({ esRegistro }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData ] = useState({ username: '', email: '', password: '' })
 
-    const handleEmailChange = (email) => setEmail(email);
-    const handlePasswordChange = (password) => setPassword(password);
+    const handleFormDataChange = (data) => {
+        setFormData(prevData => ({
+            ...prevData,
+            ...data
+        }))
+    }
 
     const handleLoggin = () => {
         const registrar = () => {
@@ -27,14 +30,27 @@ const Loggin = ({ esRegistro }) => {
             <View style={logginStyles.body}>
                 <Text style={logginStyles.titulo}>{esRegistro ? 'Registrate' : 'Inicia Sesion'}</Text>
                 <View>
+                    {
+                        esRegistro ? 
+                        (<View style={logginStyles.campoFormulario}>
+                            <Text style={logginStyles.label}>Nombre de usuario</Text>
+                            <TextInput
+                                style={logginStyles.inputCampo}
+                                placeholder="Nombre de usuario"
+                                keyboardType="default"
+                                value={formData.username}
+                                onChangeText={(data) => handleFormDataChange({ username: data })}
+                            />
+                        </View> ): null
+                    }
                     <View style={logginStyles.campoFormulario}>
                         <Text style={logginStyles.label}>Email</Text>
                         <TextInput
                             style={logginStyles.inputCampo}
                             placeholder="Correo electrónico"
                             keyboardType="email-address"
-                            value={email}
-                            onChangeText={handleEmailChange}
+                            value={formData.email}
+                            onChangeText={(data) => handleFormDataChange({ email: data })}
                         />
                     </View>
                     <View style={logginStyles.campoFormulario}>
@@ -43,8 +59,8 @@ const Loggin = ({ esRegistro }) => {
                             style={logginStyles.inputCampo}
                             placeholder="Contraseña"
                             secureTextEntry
-                            value={password}
-                            onChangeText={handlePasswordChange}
+                            value={formData.password}
+                            onChangeText={(data) => handleFormDataChange({ password: data })}
                         />
                     </View>
                     <TouchableOpacity activeOpacity={0.5} style={logginStyles.boton} onPress={handleLoggin}>
