@@ -8,6 +8,7 @@ import Nota from "./src/pages/Nota/Nota.page";
 import Login from "./src/pages/Login/Login.page";
 import Crear from "./src/pages/Crear/Crear.page";
 import Overview from "./src/pages/Overview/Overview.page";
+import { UserProvider } from "./src/context/UserProvider";
 
 export default function App() {
   useEffect(() => {
@@ -26,16 +27,18 @@ export default function App() {
 
   return (
     <NativeRouter>
-      <Routes>
-        <Route path={"/"} element={<Contenedor />}>
-          <Route index element={<Login esRegistro={false} />} />
-          <Route path="login" element={<Login esRegistro={false} />} />
-          <Route path="registro" element={<Login esRegistro={true} />} />
-          <Route path="overview" element={<Overview />} />
-          <Route path="nota" element={<Nota nota={nota} />} />
-          <Route path="editar-nota" element={<Crear nota={{}} />} />
-        </Route>
-      </Routes>
+      <UserProvider>
+        <Routes>
+          <Route path={"/"} element={<Contenedor />}>
+            <Route index element={<Login esRegistro={false} />} />
+            <Route path="login" element={<Login esRegistro={false} />} />
+            <Route path="registro" element={<Login esRegistro={true} />} />
+            <Route path="overview" element={<Overview />} />
+            <Route path="nota" element={<Nota nota={nota} />} />
+            <Route path="editar-nota" element={<Crear nota={{}} />} />
+          </Route>
+        </Routes>
+      </UserProvider>
     </NativeRouter>
   );
 }

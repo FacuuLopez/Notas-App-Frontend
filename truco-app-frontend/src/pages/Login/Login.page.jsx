@@ -1,13 +1,15 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import loginStyles from "./Login.styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-native";
 import uuid from 'react-native-uuid';
 import * as FileSystem from 'expo-file-system';
+import { UserContext } from "../../context/UserProvider";
 
 const Login = ({ esRegistro }) => {
     const [formData, setFormData ] = useState({ username: '', email: '', password: '' })
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
 
     const handleFormDataChange = (data) => {
         setFormData(prevData => ({
@@ -58,6 +60,7 @@ const Login = ({ esRegistro }) => {
                 const foundUser = users.find(user => user.email === email && user.password === password);
 
                 if (foundUser) {
+                    setUser(foundUser);
                     navigate('../overview')
                 } else {
                     setFormData(({ username: '', email: '', password: '' }))
