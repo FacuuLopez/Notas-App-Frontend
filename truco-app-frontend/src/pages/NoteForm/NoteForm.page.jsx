@@ -1,0 +1,111 @@
+import React, { useContext } from "react";
+import { View, TextInput, Button, Text } from "react-native";
+import { useNavigate } from "react-router";
+import { useForm, Controller } from "react-hook-form";
+import { UserContext } from "../../context/UserProvider";
+import styles from "./NoteForm.styles";
+
+const NoteForm = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const createNote = handleSubmit(async (data) => {
+    try {
+      const note = { id: uuid.v4(), userId: user.id, ...data };
+
+      const filePath = `${FileSystem.documentDirectory}notes.json`;
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+
+      let notes = [];
+
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        notes = JSON.parse(fileContent);
+      }
+
+      notes.push(note);
+
+      const jsonString = JSON.stringify(notes);
+      await FileSystem.writeAsStringAsync(filePath, jsonString);
+
+      navigate("../overview");
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  const handleCancel = () => {
+    navigate("../overview");
+  };
+
+  return (
+    <View style={styles.container}>
+      <Controller
+        control={control}
+        name="title"
+        rules={{
+          required: "Ingrese un título",
+          minLength: {
+            value: 5,
+            message: "El campo debe tener al menos 5 caracteres",
+          },
+        }}
+        defaultValue=""
+        render={({ field }) => (
+          <>
+            <Text style={styles.label}>Título</Text>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="Título"
+              value={field.value}
+              onChangeText={field.onChange}
+            />
+            {errors.title && (
+              <Text style={styles.error}>{errors.title.message}</Text>
+            )}
+          </>
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="description"
+        rules={{
+          required: "Ingrese una descripción",
+          minLength: {
+            value: 15,
+            message: "El campo debe tener al menos 15 caracteres",
+          },
+        }}
+        defaultValue=""
+        render={({ field }) => (
+          <>
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+              style={styles.descriptionInput}
+              placeholder="Descripción"
+              value={field.value}
+              onChangeText={field.onChange}
+              multiline
+            />
+            {errors.description && (
+              <Text style={styles.error}>{errors.description.message}</Text>
+            )}
+          </>
+        )}
+      />
+
+      <View style={styles.buttonContainer}>
+        <Button title="Crear" onPress={createNote} />
+        <Button title="Cancelar" onPress={handleCancel} />
+      </View>
+    </View>
+  );
+};
+
+export default NoteForm;
