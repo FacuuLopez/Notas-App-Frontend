@@ -1,5 +1,6 @@
+import React, { useContext } from "react";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
-import { useContext, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from "react-router-native";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
@@ -7,27 +8,17 @@ import { UserContext } from "../../context/UserProvider";
 import styles from "./UserForm.styles";
 
 const UserForm = ({ isRegister }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
-  const handleFormDataChange = (data) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      ...data,
-    }));
-  };
-
-  const createUser = async () => {
+  const handleRegister = handleSubmit(async (data) => {
     try {
-      const user = { id: uuid.v4(), ...formData };
-
-      if (user.email === "" || user.username === "" || user.password === "")
-        return;
+      const user = { id: uuid.v4(), ...data };
 
       const filePath = `${FileSystem.documentDirectory}users.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -39,6 +30,17 @@ const UserForm = ({ isRegister }) => {
         users = JSON.parse(fileContent);
       }
 
+      const existingUser = users.find(
+        (existingUser) =>
+          existingUser.username === user.username ||
+          existingUser.email === user.email
+      );
+
+      if (existingUser) {
+        alert("El nombre de usuario o email ya existen");
+        return;
+      }
+
       users.push(user);
 
       const jsonString = JSON.stringify(users);
@@ -48,15 +50,18 @@ const UserForm = ({ isRegister }) => {
     } catch (e) {
       console.log(e);
     }
-  };
+  });
 
-  const checkUser = async (email, password) => {
+  const handleLogin = handleSubmit(async (data) => {
     try {
+      const { email, password } = data;
+
       const filePath = `${FileSystem.documentDirectory}users.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
+
       if (fileExists.exists) {
         const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const users = await JSON.parse(fileContent);
+        const users = JSON.parse(fileContent);
 
         const foundUser = users.find(
           (user) => user.email === email && user.password === password
@@ -66,24 +71,15 @@ const UserForm = ({ isRegister }) => {
           setUser(foundUser);
           navigate("../overview");
         } else {
-          setFormData({ username: "", email: "", password: "" });
-          alert("Credenciales invalidas");
+          alert("Credenciales inválidas");
         }
       }
     } catch (e) {
       console.log(e);
     }
-  };
+  });
 
-  const handleLogin = () => {
-    const registrar = () => {
-      createUser();
-    };
-    const iniciarSesion = () => {
-      checkUser(formData.email, formData.password);
-    };
-    isRegister ? registrar() : iniciarSesion();
-  };
+  const handleFormSubmit = isRegister ? handleRegister : handleLogin;
 
   return (
     <View style={styles.container}>
@@ -92,50 +88,107 @@ const UserForm = ({ isRegister }) => {
           {isRegister ? "Registrate" : "Inicia Sesion"}
         </Text>
         <View>
-          {isRegister ? (
-            <View style={styles.FormField}>
-              <Text style={styles.label}>Nombre de usuario</Text>
-              <TextInput
-                style={styles.inputField}
-                placeholder="Nombre de usuario"
-                keyboardType="default"
-                value={formData.username}
-                onChangeText={(data) =>
-                  handleFormDataChange({ username: data })
-                }
-              />
-            </View>
-          ) : null}
-          <View style={styles.FormField}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.inputField}
-              placeholder="Correo electrónico"
-              keyboardType="email-address"
-              value={formData.email}
-              onChangeText={(data) => handleFormDataChange({ email: data })}
+          {isRegister && (
+            <Controller
+              styles={styles.FormField}
+              control={control}
+              name="username"
+              rules={{
+                required: "Ingrese un nombre de usuario",
+                minLength: {
+                  value: 5,
+                  message: "El campo debe tener al menos 5 caracteres",
+                },
+              }}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <Text style={styles.label}>Nombre de usuario</Text>
+                  <TextInput
+                    style={styles.inputField}
+                    placeholder="Nombre de usuario"
+                    keyboardType="default"
+                    value={field.value}
+                    onChangeText={field.onChange}
+                  />
+                  {errors.username && (
+                    <Text style={styles.error}>{errors.username.message}</Text>
+                  )}
+                </>
+              )}
             />
-          </View>
-          <View style={styles.FormField}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.inputField}
-              placeholder="Contraseña"
-              secureTextEntry
-              value={formData.password}
-              onChangeText={(data) => handleFormDataChange({ password: data })}
-            />
-          </View>
+          )}
+          <Controller
+            control={control}
+            styles={styles.FormField}
+            name="email"
+            rules={{
+              required: "Ingrese un correo electrónico",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Ingrese un correo electrónico válido",
+              },
+            }}
+            defaultValue=""
+            render={({ field }) => (
+              <>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.inputField}
+                  placeholder="Correo electrónico"
+                  keyboardType="email-address"
+                  value={field.value}
+                  onChangeText={field.onChange}
+                />
+                {errors.email && (
+                  <Text style={styles.error}>{errors.email.message}</Text>
+                )}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            rules={{
+              required: "Ingrese una contraseña",
+              pattern: {
+                value: /^(?=.*[a-zA-Z])(?=.*[0-9])/,
+                message: "El campo de contraseña debe ser alfanumérico",
+              },
+              minLength: {
+                value: 5,
+                message: "El campo debe tener al menos 5 caracteres",
+              },
+            }}
+            defaultValue=""
+            render={({ field }) => (
+              <>
+                <Text style={styles.label}>Contraseña</Text>
+                <TextInput
+                  style={styles.inputField}
+                  placeholder="Contraseña"
+                  secureTextEntry
+                  value={field.value}
+                  onChangeText={field.onChange}
+                />
+                {errors.password && (
+                  <Text style={styles.error}>{errors.password.message}</Text>
+                )}
+              </>
+            )}
+          />
+
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.button}
-            onPress={handleLogin}
+            onPress={handleFormSubmit}
           >
             <Text style={styles.textButton}>
-              {" "}
-              {isRegister ? "Registrate" : "Iniciar sesion"}{" "}
+              {isRegister ? "Registrate" : "Iniciar sesión"}
             </Text>
           </TouchableOpacity>
+
           <Link
             style={styles.hasAnAccount}
             to={isRegister ? "../login" : "../registro"}

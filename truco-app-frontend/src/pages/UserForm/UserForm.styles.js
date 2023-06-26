@@ -16,13 +16,10 @@ const styles = StyleSheet.create({
     marginBottom: 35,
     textAlign: "center",
   },
-  FormField: {
-    marginBottom: 20,
-    marginHorizontal: 20,
-  },
   label: {
     fontSize: 24,
     marginBottom: 3,
+    marginTop: 20,
   },
   inputField: {
     width: "100%",
@@ -54,6 +51,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  error: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 5,
   },
 });
 

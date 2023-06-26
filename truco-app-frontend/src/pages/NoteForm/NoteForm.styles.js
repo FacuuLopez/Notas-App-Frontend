@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderRadius: 4,
     padding: 8,
-    marginBottom: 16,
   },
   descriptionInput: {
     flex: 1,
@@ -19,11 +18,18 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     textAlignVertical: "top",
-    marginBottom: 16,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  label: {
+    marginTop: 20,
+  },
+  error: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 5,
   },
 });
 

@@ -28,7 +28,7 @@ export default function App() {
       <UserProvider>
         <Routes>
           <Route path={"/"} element={<Container />}>
-            <Route index element={<UserForm isRegister={false} />} />
+            <Route index element={<UserForm isRegister={true} />} />
             <Route path="login" element={<UserForm isRegister={false} />} />
             <Route path="registro" element={<UserForm isRegister={true} />} />
             <Route path="overview" element={<Overview />} />
