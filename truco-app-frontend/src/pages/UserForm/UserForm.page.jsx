@@ -191,7 +191,7 @@ const UserForm = ({ isRegister }) => {
 
           <Link
             style={styles.hasAnAccount}
-            to={isRegister ? "../login" : "../registro"}
+            to={isRegister ? "../login" : "../register"}
             underlayColor="#ccc"
           >
             <Text style={styles.textHasAnAccount}>

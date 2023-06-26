@@ -12,6 +12,10 @@ const UserProfile = () => {
     navigate("../overview");
   };
 
+  const handleNavigateEditUser = () => {
+    navigate("../editUser");
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -26,6 +30,10 @@ const UserProfile = () => {
           onPress={handleNavigateOverview}
         >
           <Text style={styles.buttonText}>Notas</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleNavigateEditUser}>
+          <Text style={styles.textSecondary}>Configuraciones avanzadas</Text>
         </TouchableOpacity>
       </View>
     </View>

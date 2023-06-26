@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    marginBottom: 35,
+    marginBottom: 30,
     textAlign: "center",
   },
   label: {
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 10,
     marginHorizontal: 20,
   },
