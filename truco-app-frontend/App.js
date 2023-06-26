@@ -9,6 +9,7 @@ import Login from "./src/pages/Login/Login.page";
 import Crear from "./src/pages/Crear/Crear.page";
 import Overview from "./src/pages/Overview/Overview.page";
 import { UserProvider } from "./src/context/UserProvider";
+import Perfil from "./src/pages/Perfil/Perfil.page";
 
 export default function App() {
   useEffect(() => {
@@ -30,12 +31,13 @@ export default function App() {
       <UserProvider>
         <Routes>
           <Route path={"/"} element={<Contenedor />}>
-            <Route index element={<Login esRegistro={false} />} />
+            <Route index element={<Overview />} />
             <Route path="login" element={<Login esRegistro={false} />} />
             <Route path="registro" element={<Login esRegistro={true} />} />
             <Route path="overview" element={<Overview />} />
             <Route path="nota" element={<Nota nota={nota} />} />
             <Route path="editar-nota" element={<Crear nota={{}} />} />
+            <Route path="perfil" element={<Perfil />} />
           </Route>
         </Routes>
       </UserProvider>

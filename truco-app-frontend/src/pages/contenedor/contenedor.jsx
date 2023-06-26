@@ -8,7 +8,7 @@ const Contenedor = () => {
     const contenedorStyles = StyleSheet.create({
         contenedor:{
             flex:1,
-            backgroundColor: colores.light,
+            backgroundColor: "#fff",
             paddingVertical:'10%',
             paddingHorizontal: '5%'
         }
