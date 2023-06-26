@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, Button } from "react-native";
 import { useNavigate } from "react-router";
 import uuid from "react-native-uuid";
 import { UserContext } from "../../context/UserProvider";
+import styles from "./NoteForm.styles";
 
-const Crear = () => {
+const NoteForm = () => {
   const [notaData, setNotaData] = useState({ title: "", description: "" });
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -75,31 +76,4 @@ const Crear = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  titleInput: {
-    borderWidth: 1,
-    borderColor: "grey",
-    borderRadius: 4,
-    padding: 8,
-    marginBottom: 16,
-  },
-  descriptionInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 4,
-    padding: 8,
-    textAlignVertical: "top",
-    marginBottom: 16,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
-
-export default Crear;
+export default NoteForm;

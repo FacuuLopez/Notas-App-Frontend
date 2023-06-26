@@ -4,6 +4,7 @@ import { Agenda } from "react-native-calendars";
 import { useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
 import * as FileSystem from "expo-file-system";
+import styles from "./Overview.styles";
 
 const Overview = () => {
   const [allNotes, setAllNotes] = useState([]);
@@ -35,30 +36,18 @@ const Overview = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Agenda />
       <Button
         title="Nueva nota"
-        style={{
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-          width: 10,
-          height: 10,
-        }}
+        style={styles.button}
         onPress={() => {
           navigate("../editar-nota");
         }}
       />
       <Button
         title="Perfil"
-        style={{
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-          width: 10,
-          height: 10,
-        }}
+        style={styles.button}
         onPress={() => {
           navigate("../perfil");
         }}

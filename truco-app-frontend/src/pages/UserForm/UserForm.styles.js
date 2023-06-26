@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
-const loginStyles = StyleSheet.create({
-  contenedor: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
     justifyContent: "center",
     alignContent: "center",
@@ -10,13 +10,13 @@ const loginStyles = StyleSheet.create({
     width: "80%",
     alignSelf: "center",
   },
-  titulo: {
+  title: {
     fontSize: 36,
     fontWeight: "bold",
     marginBottom: 35,
     textAlign: "center",
   },
-  campoFormulario: {
+  FormField: {
     marginBottom: 20,
     marginHorizontal: 20,
   },
@@ -24,7 +24,7 @@ const loginStyles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 3,
   },
-  inputCampo: {
+  inputField: {
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 7,
@@ -32,7 +32,7 @@ const loginStyles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
   },
-  boton: {
+  button: {
     alignItems: "center",
     backgroundColor: "#2196F3",
     padding: 10,
@@ -41,20 +41,20 @@ const loginStyles = StyleSheet.create({
     marginBottom: 10,
     marginHorizontal: 20,
   },
-  textoBoton: {
+  textButton: {
     fontSize: 16,
     color: "white",
   },
-  tienesCuenta: {
+  hasAnAccount: {
     marginHorizontal: 20,
     paddingVertical: 2,
     borderRadius: 5,
   },
-  textoTienesCuenta: {
+  textHasAnAccount: {
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
 });
 
-export default loginStyles;
+export default styles;
