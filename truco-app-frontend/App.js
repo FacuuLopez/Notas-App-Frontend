@@ -11,10 +11,10 @@ import UserProfile from "./src/pages/UserProfile/UserProfile.page";
 
 export default function App() {
   useEffect(() => {
-    async function desbloquearOrientacion() {
+    async function unlockOrientation() {
       await ScreenOrientation.unlockAsync();
     }
-    desbloquearOrientacion();
+    unlockOrientation();
   }, []);
 
   const note = {
