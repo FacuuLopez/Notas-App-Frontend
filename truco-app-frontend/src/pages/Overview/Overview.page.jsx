@@ -1,10 +1,16 @@
 import { View, Button } from "react-native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Agenda } from "react-native-calendars";
 import { useNavigate } from "react-router-native";
+import { UserContext } from "../../context/UserProvider";
 
 const Overview = () => {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    console.log('Overview', user)
+  }, [])
 
   return (
     <View style={{ flex: 1 }}>

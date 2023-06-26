@@ -1,10 +1,15 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import loginStyles from "./Login.styles";
-import { useState } from "react";
-import { Link } from "react-router-native";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-native";
+import uuid from 'react-native-uuid';
+import * as FileSystem from 'expo-file-system';
+import { UserContext } from "../../context/UserProvider";
 
 const Login = ({ esRegistro }) => {
     const [formData, setFormData ] = useState({ username: '', email: '', password: '' })
+    const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
 
     const handleFormDataChange = (data) => {
         setFormData(prevData => ({
@@ -13,16 +18,70 @@ const Login = ({ esRegistro }) => {
         }))
     }
 
-    const handleLoggin = () => {
+    const createUser = async () => {
+        try {
+            const user = { id: uuid.v4(), ...formData};
+
+            if(user.email === '' || user.username === '' || user.password === '') return 
+
+            const filePath = `${FileSystem.documentDirectory}users.json`;
+            const fileExists = await FileSystem.getInfoAsync(filePath);
+            
+            let users = [];
+
+            if (fileExists.exists) {
+                const fileContent = await FileSystem.readAsStringAsync(filePath);
+                users = JSON.parse(fileContent);
+            } 
+
+            users.push(user);
+            
+            const jsonString = JSON.stringify(users);
+            await FileSystem.writeAsStringAsync(filePath, jsonString);
+            
+
+            navigate('../login')
+
+        } catch(e) {
+            console.log(e)
+        } 
+
+        
+    };
+
+    const checkUser = async (email, password) => {
+        try {
+            const filePath = `${FileSystem.documentDirectory}users.json`;
+            const fileExists = await FileSystem.getInfoAsync(filePath);
+            if (fileExists.exists) {
+                const fileContent = await FileSystem.readAsStringAsync(filePath);
+                const users = await JSON.parse(fileContent);
+                
+                const foundUser = users.find(user => user.email === email && user.password === password);
+
+                if (foundUser) {
+                    setUser(foundUser);
+                    navigate('../overview')
+                } else {
+                    setFormData(({ username: '', email: '', password: '' }))
+                    alert('Credenciales invalidas')
+                }
+
+            };
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+     const handleLogin = () => {
         const registrar = () => {
-            alert('usuario: ' + email + ' registrado');
+            createUser()
         }
         const iniciarSesion = () => {
-            alert('usuario: ' + email + ' loguedo');
+            checkUser(formData.email, formData.password)
         }
         esRegistro ? registrar() : iniciarSesion();
     }
-
 
 
     return (
@@ -63,7 +122,7 @@ const Login = ({ esRegistro }) => {
                             onChangeText={(data) => handleFormDataChange({ password: data })}
                         />
                     </View>
-                    <TouchableOpacity activeOpacity={0.5} style={loginStyles.boton} onPress={handleLoggin}>
+                    <TouchableOpacity activeOpacity={0.5} style={loginStyles.boton} onPress={handleLogin}>
                         <Text style={loginStyles.textoBoton}> {esRegistro ? "Registrate" : "Iniciar sesion"} </Text>
                     </TouchableOpacity>
                     <Link
