@@ -1,27 +1,22 @@
-import React, { useContext, useState } from "react";
-import { View, TextInput, Button } from "react-native";
+import React, { useContext } from "react";
+import { View, TextInput, Button, Text } from "react-native";
 import { useNavigate } from "react-router";
-import uuid from "react-native-uuid";
+import { useForm, Controller } from "react-hook-form";
 import { UserContext } from "../../context/UserProvider";
 import styles from "./NoteForm.styles";
 
 const NoteForm = () => {
-  const [notaData, setNotaData] = useState({ title: "", description: "" });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const handleDataChange = (text) => {
-    setNotaData((prev) => ({
-      ...prev,
-      ...text,
-    }));
-  };
-
-  const createNote = async () => {
+  const createNote = handleSubmit(async (data) => {
     try {
-      const note = { id: uuid.v4(), userId: user.id, ...notaData };
-
-      if (note.title === "" || note.description === "") return;
+      const note = { id: uuid.v4(), userId: user.id, ...data };
 
       const filePath = `${FileSystem.documentDirectory}notes.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -33,7 +28,7 @@ const NoteForm = () => {
         notes = JSON.parse(fileContent);
       }
 
-      users.push(note);
+      notes.push(note);
 
       const jsonString = JSON.stringify(notes);
       await FileSystem.writeAsStringAsync(filePath, jsonString);
@@ -42,34 +37,71 @@ const NoteForm = () => {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const handleCreateNote = () => {
-    createNote();
-  };
+  });
 
   const handleCancel = () => {
-    handleDataChange({ title: "", description: "" });
     navigate("../overview");
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.titleInput}
-        placeholder="Título"
-        value={notaData.title}
-        onChangeText={(text) => handleDataChange({ title: text })}
+      <Controller
+        control={control}
+        name="title"
+        rules={{
+          required: "Ingrese un título",
+          minLength: {
+            value: 5,
+            message: "El campo debe tener al menos 5 caracteres",
+          },
+        }}
+        defaultValue=""
+        render={({ field }) => (
+          <>
+            <Text style={styles.label}>Título</Text>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="Título"
+              value={field.value}
+              onChangeText={field.onChange}
+            />
+            {errors.title && (
+              <Text style={styles.error}>{errors.title.message}</Text>
+            )}
+          </>
+        )}
       />
-      <TextInput
-        style={styles.descriptionInput}
-        placeholder="Descripción"
-        value={notaData.description}
-        onChangeText={(text) => handleDataChange({ description: text })}
-        multiline
+
+      <Controller
+        control={control}
+        name="description"
+        rules={{
+          required: "Ingrese una descripción",
+          minLength: {
+            value: 15,
+            message: "El campo debe tener al menos 15 caracteres",
+          },
+        }}
+        defaultValue=""
+        render={({ field }) => (
+          <>
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+              style={styles.descriptionInput}
+              placeholder="Descripción"
+              value={field.value}
+              onChangeText={field.onChange}
+              multiline
+            />
+            {errors.description && (
+              <Text style={styles.error}>{errors.description.message}</Text>
+            )}
+          </>
+        )}
       />
+
       <View style={styles.buttonContainer}>
-        <Button title="Crear" onPress={handleCreateNote} />
+        <Button title="Crear" onPress={createNote} />
         <Button title="Cancelar" onPress={handleCancel} />
       </View>
     </View>
