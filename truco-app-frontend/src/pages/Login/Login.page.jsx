@@ -1,9 +1,9 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
-import logginStyles from "./Login.styles";
+import loginStyles from "./Login.styles";
 import { useState } from "react";
 import { Link } from "react-router-native";
 
-const Loggin = ({ esRegistro }) => {
+const Login = ({ esRegistro }) => {
     const [formData, setFormData ] = useState({ username: '', email: '', password: '' })
 
     const handleFormDataChange = (data) => {
@@ -26,16 +26,16 @@ const Loggin = ({ esRegistro }) => {
 
 
     return (
-        <View style={logginStyles.contenedor}>
-            <View style={logginStyles.body}>
-                <Text style={logginStyles.titulo}>{esRegistro ? 'Registrate' : 'Inicia Sesion'}</Text>
+        <View style={loginStyles.contenedor}>
+            <View style={loginStyles.body}>
+                <Text style={loginStyles.titulo}>{esRegistro ? 'Registrate' : 'Inicia Sesion'}</Text>
                 <View>
                     {
                         esRegistro ? 
-                        (<View style={logginStyles.campoFormulario}>
-                            <Text style={logginStyles.label}>Nombre de usuario</Text>
+                        (<View style={loginStyles.campoFormulario}>
+                            <Text style={loginStyles.label}>Nombre de usuario</Text>
                             <TextInput
-                                style={logginStyles.inputCampo}
+                                style={loginStyles.inputCampo}
                                 placeholder="Nombre de usuario"
                                 keyboardType="default"
                                 value={formData.username}
@@ -43,35 +43,35 @@ const Loggin = ({ esRegistro }) => {
                             />
                         </View> ): null
                     }
-                    <View style={logginStyles.campoFormulario}>
-                        <Text style={logginStyles.label}>Email</Text>
+                    <View style={loginStyles.campoFormulario}>
+                        <Text style={loginStyles.label}>Email</Text>
                         <TextInput
-                            style={logginStyles.inputCampo}
+                            style={loginStyles.inputCampo}
                             placeholder="Correo electrónico"
                             keyboardType="email-address"
                             value={formData.email}
                             onChangeText={(data) => handleFormDataChange({ email: data })}
                         />
                     </View>
-                    <View style={logginStyles.campoFormulario}>
-                        <Text style={logginStyles.label}>Password</Text>
+                    <View style={loginStyles.campoFormulario}>
+                        <Text style={loginStyles.label}>Password</Text>
                         <TextInput
-                            style={logginStyles.inputCampo}
+                            style={loginStyles.inputCampo}
                             placeholder="Contraseña"
                             secureTextEntry
                             value={formData.password}
                             onChangeText={(data) => handleFormDataChange({ password: data })}
                         />
                     </View>
-                    <TouchableOpacity activeOpacity={0.5} style={logginStyles.boton} onPress={handleLoggin}>
-                        <Text style={logginStyles.textoBoton}> {esRegistro ? "Registrate" : "Iniciar sesion"} </Text>
+                    <TouchableOpacity activeOpacity={0.5} style={loginStyles.boton} onPress={handleLoggin}>
+                        <Text style={loginStyles.textoBoton}> {esRegistro ? "Registrate" : "Iniciar sesion"} </Text>
                     </TouchableOpacity>
                     <Link
-                        style={logginStyles.tienesCuenta}
+                        style={loginStyles.tienesCuenta}
                         to={esRegistro ? '../loggin' : '../registro'}
                         underlayColor="#ccc"
                     >
-                        <Text style={logginStyles.textoTienesCuenta}>{esRegistro ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}</Text>
+                        <Text style={loginStyles.textoTienesCuenta}>{esRegistro ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}</Text>
                     </Link>
                 </View>
             </View>
@@ -80,4 +80,4 @@ const Loggin = ({ esRegistro }) => {
     )
 }
 
-export default Loggin;
+export default Login;

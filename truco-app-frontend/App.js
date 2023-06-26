@@ -5,7 +5,7 @@ import Contenedor from "./src/pages/contenedor/contenedor";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect } from "react";
 import Nota from "./src/pages/Nota/Nota.page";
-import Loggin from "./src/pages/Login/Login.page";
+import Login from "./src/pages/Login/Login.page";
 import NotaEditar from "./src/pages/Crear/Crear.page";
 import Overview from "./src/pages/Overview/Overview.page";
 
@@ -21,9 +21,9 @@ export default function App() {
     <NativeRouter>
       <Routes>
         <Route path={"/"} element={<Contenedor />}>
-          <Route index element={<Loggin esRegistro={false} />} />
-          <Route path="loggin" element={<Loggin esRegistro={false} />} />
-          <Route path="registro" element={<Loggin esRegistro={true} />} />
+          <Route index element={<Login esRegistro={false} />} />
+          <Route path="login" element={<Login esRegistro={false} />} />
+          <Route path="registro" element={<Login esRegistro={true} />} />
           <Route path="overview" element={<Overview />} />
           <Route path="nota" element={<Nota />} />
           <Route path="editar-nota" element={<NotaEditar nota={{}} />} />
