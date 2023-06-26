@@ -1,93 +1,74 @@
-import { StyleSheet ,Text, TouchableOpacity, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
-import { colorTema1 } from '../../utils/colors';
+import React, { useState } from 'react';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
 
-const NotaEditar = ({nota}) => {
-    const colores = colorTema1;
+const Crear = () => {
+  const [notaData, setNotaData] = useState({ title: '', description: ''});
 
-    const {descripcion = '', titulo = '' } = nota;
+  const handleDataChange = (text) => {
+    setNotaData(prev => ({
+        ...prev,
+        ...text
+    }))
+  };
 
-    const [nuevoTitulo, setNuevoTitulo] = useState(titulo);
-    const [nuevaDescripcion, setNuevaDescrepcion] = useState(descripcion);
+  const handleCreateNote = () => {
+    console.log('Título:', title);
+    console.log('Descripción:', description);
+  };
 
-    const onChangeTitulo = (titulo) => setNuevoTitulo(titulo);
-    const onChangeDescripcion = (descripcion) => setNuevaDescrepcion(descripcion)
-    const guardarNota = () => {
+  const handleCancel = () => {
+    setTitle('');
+    setDescription('');
+  };
 
-    }
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.titleInput}
+        placeholder="Título"
+        value={notaData.title}
+        onChangeText={(text) => handleDataChange({title: text})}
+      />
+      <TextInput
+        style={styles.descriptionInput}
+        placeholder="Descripción"
+        value={notaData.description}
+        onChangeText={(text) => handleDataChange({description: text})}
+        multiline
+      />
+      <View style={styles.buttonContainer}>
+        <Button title="Crear" onPress={handleCreateNote} />
+        <Button title="Cancelar" onPress={handleCancel} />
+      </View>
+    </View>
+  );
+};
 
-    return (
-        <View style={notaEditarStyles.contenedor}>
-            <View style={notaEditarStyles.titulo}>
-                <TextInput style={notaEditarStyles.tituloInputTexto} onChangeText={onChangeTitulo} placeholder="Titulo">
-                    {nuevoTitulo}
-                </TextInput>
-            </View>
-            <View style={notaEditarStyles.descripcion}>
-                <TextInput style={notaEditarStyles.descripcionInputTexto}
-                 onChangeText={onChangeDescripcion}
-                 placeholder="Descripcion"
-                 multiline>
-                    {nuevaDescripcion}
-                </TextInput>
-            </View>
-            <TouchableOpacity style={notaEditarStyles.botonContenedor} onPress={guardarNota} activeOpacity={0.6}>
-                <Text style={notaEditarStyles.boton}>Guardar Cambios</Text>
-            </TouchableOpacity>
-        </View>
-    )
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  titleInput: {
+    borderWidth: 1,
+    borderColor: 'grey',
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+  },
+  descriptionInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    padding: 8,
+    textAlignVertical: 'top',
+    marginBottom: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
 
-export default NotaEditar
-
-const notaEditarStyles = StyleSheet.create({
-    contenedor: {
-        flex: 1
-    },
-    label:{
-        marginBottom:3,
-        marginTop:15,
-        fontSize:16,
-        fontWeight:'bold'
-    },
-    titulo: {
-        marginBottom:3
-    },
-    tituloInputTexto: {
-        placeholder:'nuevo titulo',
-        backgroundColor: 'white',
-        borderWidth:2,
-        borderRadius:3,
-        padding:8,
-        textAlign:'center',
-        fontSize:20,
-        fontWeight:'bold',
-    },
-    descripcion: {
-        flex:1,
-    },
-    descripcionInputTexto: {
-        flex:1,
-        paddingVertical:20,
-        paddingHorizontal:10,
-        fontSize:16,
-        textAlignVertical: "top",
-        placeholder:'nueva descripcion',
-        backgroundColor: 'white',
-        borderWidth:2,
-        borderRadius:3,
-        padding:3,
-    },
-    botonContenedor: {
-        marginTop:25,
-        padding:7,
-        backgroundColor: colorTema1.primary,
-        alignSelf:'center',
-        borderRadius:5,
-    },
-    boton: {
-        color: colorTema1.light,
-        textTransform:'uppercase',
-        fontSize:22,
-    }
-})
+export default Crear;
