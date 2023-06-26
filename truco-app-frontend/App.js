@@ -17,15 +17,22 @@ export default function App() {
     desbloquearOrientacion();
   }, []);
 
+  const nota = {
+    imagen:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhln4-ygosRcYC8XLmLPuh_bxZXFH8xpD48w&usqp=CAU",
+    titulo: "Titulo de la nota",
+    descripcion: "Descripcion de la nota",
+  };
+
   return (
     <NativeRouter>
       <Routes>
         <Route path={"/"} element={<Contenedor />}>
-          <Route index element={<Login esRegistro={false} />} />
+          <Route index element={<Nota nota={nota} />} />
           <Route path="login" element={<Login esRegistro={false} />} />
           <Route path="registro" element={<Login esRegistro={true} />} />
           <Route path="overview" element={<Overview />} />
-          <Route path="nota" element={<Nota />} />
+          <Route path="nota" element={<Nota nota={nota} />} />
           <Route path="editar-nota" element={<NotaEditar nota={{}} />} />
         </Route>
       </Routes>

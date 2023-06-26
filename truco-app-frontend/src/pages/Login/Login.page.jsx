@@ -68,7 +68,7 @@ const Login = ({ esRegistro }) => {
                     </TouchableOpacity>
                     <Link
                         style={loginStyles.tienesCuenta}
-                        to={esRegistro ? '../loggin' : '../registro'}
+                        to={esRegistro ? '../login' : '../registro'}
                         underlayColor="#ccc"
                     >
                         <Text style={loginStyles.textoTienesCuenta}>{esRegistro ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}</Text>
