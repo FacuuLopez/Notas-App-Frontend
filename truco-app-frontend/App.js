@@ -30,11 +30,11 @@ export default function App() {
       <UserProvider>
         <Routes>
           <Route path={"/"} element={<Container />}>
-            <Route index element={<Note note={note} />} />
+            <Route index element={<UserForm isRegister={false} />} />
             <Route path="login" element={<UserForm isRegister={false} />} />
             <Route path="register" element={<UserForm isRegister={true} />} />
             <Route path="overview" element={<Overview />} />
-            <Route path="note" element={<Note note={note} />} />
+            <Route path="note" element={<Note />} />
             <Route path="createNote" element={<NoteForm />} />
             <Route path="profile" element={<UserProfile />} />
             <Route path="editUser" element={<EditUser />} />
