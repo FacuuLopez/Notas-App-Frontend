@@ -22,6 +22,7 @@ const EditNote = () => {
     description: "",
     userId: "",
     img: "",
+    date: "",
   });
   const { user } = useContext(UserContext);
 

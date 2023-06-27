@@ -53,10 +53,7 @@ export const useNotes = () => {
       const note = {
         id: uuid.v4(),
         userId: user.id,
-        date: `${zeroPad(date.getFullYear(), 4)}-${zeroPad(
-          date.getMonth() + 1,
-          2
-        )}-${zeroPad(date.getDate(), 2)}`,
+        date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
         img: `https://image.pollinations.ai/prompt/${data.title}`,
         ...data,
       };

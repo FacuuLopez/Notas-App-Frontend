@@ -1,36 +1,72 @@
-import { View, Button } from "react-native";
-import React, { useContext, useEffect } from "react";
-import { Agenda } from "react-native-calendars";
+import React, { useContext } from "react";
+import { View, Button, Text, TouchableOpacity, FlatList } from "react-native";
 import { useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
 import { useNotes } from "../../hooks/useNotes";
-
 import styles from "./Overview.styles";
 
 const Overview = () => {
   const navigate = useNavigate();
+  const { allNotes } = useNotes();
 
-  const { overviewNotes } = useNotes();
+  const handleNavigateCreateNote = () => {
+    navigate("../createNote");
+  };
 
-  console.log(overviewNotes);
+  const handleNavigateProfile = () => {
+    navigate("../profile");
+  };
+
+  const renderItem = ({ item }) => {
+    const handleViewNote = () => {
+      navigate("../note", { state: item });
+    };
+
+    return (
+      <TouchableOpacity style={styles.noteContainer} onPress={handleViewNote}>
+        <Text style={styles.noteTitle}>{item.title}</Text>
+        <Text style={styles.noteDescription}>{item.description}</Text>
+        <Text style={styles.noteDate}>{item.date}</Text>
+        <Button
+          title="Ver nota"
+          onPress={handleViewNote}
+          style={styles.viewNoteButton}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderEmptyNotes = () => (
+    <View style={styles.emptyNotesContainer}>
+      <Text style={styles.emptyNotesText}>No hay notas creadas</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Agenda items={overviewNotes} />
-      <Button
-        title="New note"
-        style={styles.button}
-        onPress={() => {
-          navigate("../createNote");
-        }}
-      />
-      <Button
-        title="Perfil"
-        style={styles.button}
-        onPress={() => {
-          navigate("../profile");
-        }}
-      />
+      {allNotes.length > 0 ? (
+        <FlatList
+          data={allNotes}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.notesContainer}
+        />
+      ) : (
+        renderEmptyNotes()
+      )}
+
+      <View style={styles.buttonContainer}>
+        <Button
+          title="New note"
+          onPress={handleNavigateCreateNote}
+          style={styles.button}
+        />
+        <Button
+          title="Perfil"
+          onPress={handleNavigateProfile}
+          style={styles.button}
+        />
+      </View>
     </View>
   );
 };

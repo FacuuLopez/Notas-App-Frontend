@@ -19,12 +19,6 @@ export default function App() {
     unlockOrientation();
   }, []);
 
-  const note = {
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhln4-ygosRcYC8XLmLPuh_bxZXFH8xpD48w&usqp=CAU",
-    title: "Titulo de la nota",
-    description: "Descripcion de la nota",
-  };
-
   return (
     <NativeRouter>
       <UserProvider>
