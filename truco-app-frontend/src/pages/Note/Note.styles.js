@@ -13,11 +13,23 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  imageContainer: {
+    position: "relative",
+    width: "100%",
+    height: 200,
+  },
   image: {
     width: "100%",
     height: 200,
     borderRadius: 8,
     marginBottom: 16,
+  },
+  imageLoader: {
+    position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    width: "100%",
+    height: 200,
   },
   title: {
     fontSize: 18,

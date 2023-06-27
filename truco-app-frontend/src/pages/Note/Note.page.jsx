@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Image, Text, Button } from "react-native";
+import { View, Image, Text, Button, ActivityIndicator } from "react-native";
 import styles from "./Note.styles";
 import { useLocation, useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
@@ -11,6 +11,8 @@ const Note = () => {
   const location = useLocation();
   const noteReceived = location.state;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
+
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   const handleNavigateOverview = () => {
     navigate("../overview");
@@ -31,7 +33,21 @@ const Note = () => {
   return (
     <View style={styles.container}>
       {note?.img ? (
-        <Image source={{ uri: note.img }} style={styles.image} />
+        <View style={styles.imageContainer}>
+          {isLoadingImage ? (
+            <View style={styles.imageLoader}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : (
+            <></>
+          )}
+          <Image
+            source={{ uri: note.img }}
+            style={styles.image}
+            onLoadStart={() => setIsLoadingImage(true)}
+            onLoad={() => setIsLoadingImage(false)}
+          />
+        </View>
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />
       )}
