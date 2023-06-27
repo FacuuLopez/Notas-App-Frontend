@@ -5,7 +5,6 @@ import { UserContext } from "../context/UserProvider";
 
 export const useNotes = () => {
   const [allNotes, setAllNotes] = useState([]);
-  const [overviewNotes, setOverviewNotes] = useState({});
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -15,16 +14,6 @@ export const useNotes = () => {
       getNotesById(user.id);
     }
   }, [user]);
-
-  useEffect(() => {
-    const on = {};
-
-    allNotes.forEach((note) => {
-      on[note.date] = [...(on[note.date] || []), { name: note.title }];
-    });
-
-    setOverviewNotes(on);
-  }, [allNotes]);
 
   const getNotesById = async (id) => {
     try {
@@ -139,7 +128,6 @@ export const useNotes = () => {
 
   return {
     allNotes,
-    overviewNotes,
     getNotesById,
     createNote,
     editNote,

@@ -3,6 +3,7 @@ import { View, Image, Text, Button } from "react-native";
 import styles from "./Note.styles";
 import { useLocation, useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
+import { ActivityIndicator } from "react-native";
 
 const Note = () => {
   const { user } = useContext(UserContext);
@@ -32,7 +33,7 @@ const Note = () => {
       {note?.img ? (
         <Image source={{ uri: note.img }} style={styles.image} />
       ) : (
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
       )}
 
       <Text style={styles.title}>{note?.title}</Text>

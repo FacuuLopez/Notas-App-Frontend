@@ -4,6 +4,7 @@ import { UserContext } from "../../context/UserProvider";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import styles from "./UserProfile.styles";
+import { ActivityIndicator } from "react-native";
 
 const UserProfile = () => {
   const { user } = useContext(UserContext);
@@ -43,7 +44,7 @@ const UserProfile = () => {
         {avatar ? (
           <Image source={{ uri: avatar }} style={styles.avatar} />
         ) : (
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color="#0000ff" />
         )}
         <Text style={styles.label}>Username: {user.username}</Text>
         <Text style={styles.label}>Email: {user.email}</Text>
