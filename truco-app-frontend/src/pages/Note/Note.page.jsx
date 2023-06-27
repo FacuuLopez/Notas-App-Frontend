@@ -3,7 +3,6 @@ import { View, Image, Text, Button, ActivityIndicator } from "react-native";
 import styles from "./Note.styles";
 import { useLocation, useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
-import { ActivityIndicator } from "react-native";
 
 const Note = () => {
   const { user } = useContext(UserContext);
@@ -32,25 +31,21 @@ const Note = () => {
 
   return (
     <View style={styles.container}>
-      {note?.img ? (
-        <View style={styles.imageContainer}>
-          {isLoadingImage ? (
-            <View style={styles.imageLoader}>
-              <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-          ) : (
-            <></>
-          )}
-          <Image
-            source={{ uri: note.img }}
-            style={styles.image}
-            onLoadStart={() => setIsLoadingImage(true)}
-            onLoad={() => setIsLoadingImage(false)}
-          />
-        </View>
-      ) : (
-        <ActivityIndicator size="large" color="#0000ff" />
-      )}
+      <View style={styles.imageContainer}>
+        {isLoadingImage ? (
+          <View style={styles.imageLoader}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : (
+          <></>
+        )}
+        <Image
+          source={{ uri: note.img }}
+          style={styles.image}
+          onLoadStart={() => setIsLoadingImage(true)}
+          onLoad={() => setIsLoadingImage(false)}
+        />
+      </View>
 
       <Text style={styles.title}>{note?.title}</Text>
       <Text style={styles.description}>{note?.description}</Text>
