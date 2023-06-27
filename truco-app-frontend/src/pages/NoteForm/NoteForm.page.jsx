@@ -3,6 +3,8 @@ import { View, TextInput, Button, Text } from "react-native";
 import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { UserContext } from "../../context/UserProvider";
+import * as FileSystem from "expo-file-system";
+import uuid from "react-native-uuid";
 import styles from "./NoteForm.styles";
 import { useNotes } from "../../hooks/useNotes";
 

@@ -10,6 +10,15 @@ const Note = () => {
   const location = useLocation();
   const noteReceived = location.state;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleImageLoadStart = () => {
+    setIsLoading(true);
+  };
+
+  const handleImageLoadEnd = () => {
+    setIsLoading(false);
+  };
 
   const handleNavigateOverview = () => {
     navigate("../overview");
@@ -29,7 +38,10 @@ const Note = () => {
 
   return (
     <View style={styles.container}>
-      {note?.img && <Image source={{ uri: note.img }} style={styles.image} />}
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) :note?.img && <Image source={{ uri: note.img }} style={styles.image}
+      onLoadStart={handleImageLoadStart} onLoadEnd={handleImageLoadEnd} />}
       <Text style={styles.title}>{note?.title}</Text>
       <Text style={styles.description}>{note?.description}</Text>
       <View style={styles.buttonContainer}>

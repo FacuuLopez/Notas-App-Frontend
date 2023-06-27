@@ -57,6 +57,7 @@ export const useNotes = () => {
           date.getMonth() + 1,
           2
         )}-${zeroPad(date.getDate(), 2)}`,
+        img: `https://image.pollinations.ai/prompt/${data.title}`,
         ...data,
       };
 
@@ -89,7 +90,7 @@ export const useNotes = () => {
         description: data.description,
         userId: note.userId,
         date: note.date,
-        img: note.img,
+        img: `https://image.pollinations.ai/prompt/${data.title}`,
       };
 
       const filePath = `${FileSystem.documentDirectory}notes.json`;
