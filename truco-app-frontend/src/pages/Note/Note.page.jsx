@@ -31,7 +31,9 @@ const Note = () => {
     <View style={styles.container}>
       {note?.img ? (
         <Image source={{ uri: note.img }} style={styles.image} />
-      ) : null}
+      ) : (
+        <Text>Loading...</Text>
+      )}
 
       <Text style={styles.title}>{note?.title}</Text>
       <Text style={styles.description}>{note?.description}</Text>

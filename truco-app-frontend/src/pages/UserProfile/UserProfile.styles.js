@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    marginBottom: 20,
   },
   label: {
     fontSize: 18,
