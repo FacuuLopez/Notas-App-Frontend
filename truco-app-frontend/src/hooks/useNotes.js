@@ -1,66 +1,151 @@
-// import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMutation } from "react-query";
+import { useState, useContext, useEffect } from "react";
+import uuid from "react-native-uuid";
+import * as FileSystem from "expo-file-system";
+import { UserContext } from "../context/UserProvider";
 
-export const useNotes = (hardcoded) => {
-  const queryClient = useQueryClient();
+export const useNotes = () => {
+  const [allNotes, setAllNotes] = useState([]);
+  const [overviewNotes, setOverviewNotes] = useState({});
+  const { user } = useContext(UserContext);
 
-  const { data } = useQuery({
-    queryKey: ["notes"],
-    queryFn: () =>
-      fetch(`localhost:9000/api/user/${user.userId}/note`)
-        .then((res) => res.json())
-        .then((json) => JSON.parse(json))
-        .then((notes) =>
-          notes.forEach((note) => {
-            note.date = new Date(note.date);
-          })
-        ),
-  });
+  useEffect(() => {
+    if (!user.id) {
+      navigate("../login");
+    } else {
+      getNotesById(user.id);
+    }
+  }, [user]);
 
-  let notes = hardcoded
-    ? [
-        {
-          title: "Mi primera nota",
-          description:
-            "Lorem culpa consectetur deserunt ut Lorem et ipsum dolore est. Sint dolor id fugiat laboris esse enim amet incididunt veniam minim amet ut irure proident. Nulla culpa laborum consequat consectetur dolore commodo reprehenderit consectetur fugiat exercitation aute mollit. Commodo in nostrud sit amet aliquip veniam laborum id aute. Quis dolore nostrud amet qui nostrud pariatur elit non sint reprehenderit eiusmod nulla elit. Cillum eiusmod Lorem laboris ex esse officia id nostrud nisi. Deserunt sint minim ad nulla sit.",
-          img: "http://unsplash.it/512/384",
-          date: new Date("6/23/2023"),
-          userId: user.userId,
-        },
-        {
-          title: "Mi segunda nota",
-          description:
-            "Lorem culpa consectetur deserunt ut Lorem et ipsum dolore est. Sint dolor id fugiat laboris esse enim amet incididunt veniam minim amet ut irure proident. Nulla culpa laborum consequat consectetur dolore commodo reprehenderit consectetur fugiat exercitation aute mollit. Commodo in nostrud sit amet aliquip veniam laborum id aute. Quis dolore nostrud amet qui nostrud pariatur elit non sint reprehenderit eiusmod nulla elit. Cillum eiusmod Lorem laboris ex esse officia id nostrud nisi. Deserunt sint minim ad nulla sit.",
-          img: "http://unsplash.it/512/384",
-          date: new Date("6/24/2023"),
-          userId: user.userId,
-        },
-        {
-          title: "Mi tercer nota",
-          description:
-            "Lorem culpa consectetur deserunt ut Lorem et ipsum dolore est. Sint dolor id fugiat laboris esse enim amet incididunt veniam minim amet ut irure proident. Nulla culpa laborum consequat consectetur dolore commodo reprehenderit consectetur fugiat exercitation aute mollit. Commodo in nostrud sit amet aliquip veniam laborum id aute. Quis dolore nostrud amet qui nostrud pariatur elit non sint reprehenderit eiusmod nulla elit. Cillum eiusmod Lorem laboris ex esse officia id nostrud nisi. Deserunt sint minim ad nulla sit.",
-          img: "http://unsplash.it/512/384",
-          date: new Date("6/25/2023"),
-          userId: user.userId,
-        },
-      ]
-    : data;
+  useEffect(() => {
+    const on = {};
 
-  const createNote = hardcoded
-    ? {
-        mutate: (note) => (notes = [...notes, note]),
+    allNotes.forEach((note) => {
+      on[note.date] = [...(on[note.date] || []), { name: note.title }];
+    });
+
+    setOverviewNotes(on);
+  }, [allNotes]);
+
+  const getNotesById = async (id) => {
+    try {
+      const filePath = `${FileSystem.documentDirectory}notes.json`;
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        const notes = JSON.parse(fileContent);
+
+        const matchedNotes = notes.filter((note) => note.userId === id);
+
+        setAllNotes(matchedNotes);
+      } else {
+        setAllNotes([]);
       }
-    : useMutation(
-        (note) =>
-          fetch(`localhost:9000/api/user/${user.userId}/note`, {
-            method: "POST",
-            body: JSON.stringify(note),
-          }),
-        {
-          onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: ["notes"] }),
-        }
-      );
+    } catch (e) {
+      console.log(e);
+      setAllNotes([]);
+    }
+  };
 
-  return { notes, createNote };
+  const createNote = async (data, callback) => {
+    const date = new Date();
+    try {
+      const note = {
+        id: uuid.v4(),
+        userId: user.id,
+        date: `${zeroPad(date.getFullYear(), 4)}-${zeroPad(
+          date.getMonth() + 1,
+          2
+        )}-${zeroPad(date.getDate(), 2)}`,
+        img: `https://image.pollinations.ai/prompt/${data.title}`,
+        ...data,
+      };
+
+      const filePath = `${FileSystem.documentDirectory}notes.json`;
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+
+      let notes = [];
+
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        notes = JSON.parse(fileContent);
+      }
+
+      notes.push(note);
+
+      const jsonString = JSON.stringify(notes);
+      await FileSystem.writeAsStringAsync(filePath, jsonString);
+
+      callback();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const editNote = async (data, callback) => {
+    try {
+      const editedNote = {
+        id: note.id,
+        title: data.title,
+        description: data.description,
+        userId: note.userId,
+        date: note.date,
+        img: `https://image.pollinations.ai/prompt/${data.title}`,
+      };
+
+      const filePath = `${FileSystem.documentDirectory}notes.json`;
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        const notes = JSON.parse(fileContent);
+
+        const updatedNotes = notes.map((n) =>
+          n.id === editedNote.id ? editedNote : note
+        );
+
+        const jsonString = JSON.stringify(updatedNotes);
+        await FileSystem.writeAsStringAsync(filePath, jsonString);
+
+        callback();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deleteNote = async (noteId, callback) => {
+    try {
+      const filePath = `${FileSystem.documentDirectory}notes.json`;
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        const notes = JSON.parse(fileContent);
+
+        const newNotes = notes.filter((note) => note.id !== noteId);
+
+        if (newNotes.length < notes.length) {
+          const jsonString = JSON.stringify(newNotes);
+          await FileSystem.writeAsStringAsync(filePath, jsonString);
+
+          callback();
+        } else {
+          alert("No es posible eliminar la nota");
+          return;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return {
+    allNotes,
+    overviewNotes,
+    getNotesById,
+    createNote,
+    editNote,
+    deleteNote,
+  };
 };
