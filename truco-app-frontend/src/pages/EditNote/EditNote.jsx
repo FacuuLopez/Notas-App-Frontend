@@ -5,6 +5,7 @@ import * as FileSystem from "expo-file-system";
 import { useNavigate, useLocation } from "react-router";
 import styles from "./EditNote.styles";
 import { UserContext } from "../../context/UserProvider";
+import { useNotes } from "../../hooks/useNotes";
 
 const EditNote = () => {
   const {
@@ -23,6 +24,8 @@ const EditNote = () => {
     img: "",
   });
   const { user } = useContext(UserContext);
+
+  const { editNote, deleteNote } = useNotes();
 
   const handleNavigateOverview = () => {
     navigate("../overview");
@@ -46,67 +49,17 @@ const EditNote = () => {
     );
   };
 
-  const confirmDeleteNote = async () => {
-    try {
-      const noteId = note.id;
-      const filePath = `${FileSystem.documentDirectory}notes.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
+  const confirmDeleteNote = async () =>
+    deleteNote(note.id, () => {
+      alert("Nota eliminada exitosamente");
+      navigate("../overview");
+    });
 
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const notes = JSON.parse(fileContent);
-
-        const newNotes = notes.filter((note) => note.id !== noteId);
-
-        if (newNotes.length < notes.length) {
-          const jsonString = JSON.stringify(newNotes);
-          await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-          alert("Nota eliminada exitosamente");
-
-          navigate("../overview");
-        } else {
-          alert("No es posible eliminar la nota");
-          return;
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const onSubmit = async (data) => {
-    try {
-      const editedNote = {
-        id: note.id,
-        title: data.title,
-        description: data.description,
-        userId: note.userId,
-        img: note.img,
-      };
-
-      const filePath = `${FileSystem.documentDirectory}notes.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const notes = JSON.parse(fileContent);
-
-        const updatedNotes = notes.map((n) =>
-          n.id === editedNote.id ? editedNote : note
-        );
-
-        const jsonString = JSON.stringify(updatedNotes);
-        await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-        alert("Nota actualizada exitosamente");
-
-        navigate("../overview");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const onSubmit = async (data) =>
+    editNote(data, () => {
+      alert("Nota actualizada exitosamente");
+      navigate("../overview");
+    });
 
   useEffect(() => {
     if (!user?.id || !noteReceived?.title) {

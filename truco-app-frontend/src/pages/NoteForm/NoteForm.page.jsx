@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { UserContext } from "../../context/UserProvider";
 import styles from "./NoteForm.styles";
+import { useNotes } from "../../hooks/useNotes";
 
 const NoteForm = () => {
   const {
@@ -14,30 +15,11 @@ const NoteForm = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const createNote = handleSubmit(async (data) => {
-    try {
-      const note = { id: uuid.v4(), userId: user.id, ...data };
+  const { createNote } = useNotes();
 
-      const filePath = `${FileSystem.documentDirectory}notes.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      let notes = [];
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        notes = JSON.parse(fileContent);
-      }
-
-      notes.push(note);
-
-      const jsonString = JSON.stringify(notes);
-      await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-      navigate("../overview");
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  const submitNote = handleSubmit(async (data) =>
+    createNote(data, () => navigate("../overview"))
+  );
 
   const handleCancel = () => {
     navigate("../overview");
@@ -107,7 +89,7 @@ const NoteForm = () => {
       />
 
       <View style={styles.buttonContainer}>
-        <Button title="Crear" onPress={createNote} />
+        <Button title="Crear" onPress={submitNote} />
         <Button title="Cancelar" onPress={handleCancel} />
       </View>
     </View>
