@@ -42,14 +42,14 @@ const Overview = () => {
         title="Nueva nota"
         style={styles.button}
         onPress={() => {
-          navigate("../editar-nota");
+          navigate("../editNote");
         }}
       />
       <Button
         title="Perfil"
         style={styles.button}
         onPress={() => {
-          navigate("../perfil");
+          navigate("../profile");
         }}
       />
     </View>
