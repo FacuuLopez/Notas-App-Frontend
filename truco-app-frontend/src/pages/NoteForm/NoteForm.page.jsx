@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
@@ -42,6 +42,12 @@ const NoteForm = () => {
   const handleCancel = () => {
     navigate("../overview");
   };
+
+  useEffect(() => {
+    if (!user.id) {
+      navigate("../login");
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
