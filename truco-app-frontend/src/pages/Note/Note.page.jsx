@@ -39,12 +39,14 @@ const Note = () => {
         ) : (
           <></>
         )}
-        <Image
-          source={{ uri: note.img }}
-          style={styles.image}
-          onLoadStart={() => setIsLoadingImage(true)}
-          onLoad={() => setIsLoadingImage(false)}
-        />
+        {note.img ? (
+          <Image
+            source={{ uri: note.img }}
+            style={styles.image}
+            onLoadStart={() => setIsLoadingImage(true)}
+            onLoad={() => setIsLoadingImage(false)}
+          />
+        ) : null}
       </View>
 
       <Text style={styles.title}>{note?.title}</Text>
