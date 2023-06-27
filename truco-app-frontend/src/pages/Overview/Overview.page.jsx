@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Agenda } from "react-native-calendars";
 import { useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
+import { useNotes } from "../../hooks/useNotes";
+
 import * as FileSystem from "expo-file-system";
 import styles from "./Overview.styles";
 
@@ -10,6 +12,7 @@ const Overview = () => {
   const [allNotes, setAllNotes] = useState([]);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const { notes } = useNotes();
 
   const getNotesById = async (id) => {
     try {
@@ -39,8 +42,13 @@ const Overview = () => {
     <View style={styles.container}>
       <Agenda />
       <Button
-        title="Nueva nota"
+        title="New note"
         style={styles.button}
+        items={notes.reduce(
+          (items, note) =>
+            (items[note.date.toISOString()] = { name: note.title }),
+          {}
+        )}
         onPress={() => {
           navigate("../editNote");
         }}
