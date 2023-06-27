@@ -50,7 +50,7 @@ const Overview = () => {
           {}
         )}
         onPress={() => {
-          navigate("../editNote");
+          navigate("../createNote");
         }}
       />
       <Button
