@@ -9,7 +9,6 @@ export const useNotes = () => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    alert("refreshing");
     if (!user.id) {
       navigate("../login");
     } else {
@@ -50,11 +49,16 @@ export const useNotes = () => {
 
   const createNote = async (data, callback) => {
     const date = new Date();
+    const zeroPad = (num, places) => String(num).padStart(places, "0");
+
     try {
       const note = {
         id: uuid.v4(),
         userId: user.id,
-        date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+        date: `${zeroPad(date.getFullYear(), 4)}-${zeroPad(
+          date.getMonth() + 1,
+          2
+        )}-${zeroPad(date.getDate(), 2)}`,
         ...data,
       };
 
