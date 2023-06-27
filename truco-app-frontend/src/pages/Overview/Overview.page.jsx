@@ -1,58 +1,25 @@
 import { View, Button } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Agenda } from "react-native-calendars";
 import { useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
-// import { useNotes } from "../../hooks/useNotes";
+import { useNotes } from "../../hooks/useNotes";
 
-import * as FileSystem from "expo-file-system";
 import styles from "./Overview.styles";
 
 const Overview = () => {
-  const [allNotes, setAllNotes] = useState([]);
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  // const { notes } = useNotes();
 
-  const getNotesById = async (id) => {
-    try {
-      const filePath = `${FileSystem.documentDirectory}notes.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
+  const { overviewNotes } = useNotes();
 
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const notes = JSON.parse(fileContent);
-
-        const matchedNotes = notes.filter((note) => note.userId === id);
-        setAllNotes(matchedNotes);
-      } else {
-        setAllNotes([]);
-      }
-    } catch (e) {
-      console.log(e);
-      setAllNotes([]);
-    }
-  };
-
-  useEffect(() => {
-    if (!user.id) {
-      navigate("../login");
-    } else {
-      getNotesById(user.id);
-    }
-  }, []);
+  console.log(overviewNotes);
 
   return (
     <View style={styles.container}>
-      <Agenda />
+      <Agenda items={overviewNotes} />
       <Button
         title="New note"
         style={styles.button}
-        items={allNotes.reduce(
-          (items, note) =>
-            (items[note.date.toISOString()] = { name: note.title }),
-          {}
-        )}
         onPress={() => {
           navigate("../createNote");
         }}
