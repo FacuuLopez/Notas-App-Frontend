@@ -42,7 +42,7 @@ const Overview = () => {
         title="Nueva nota"
         style={styles.button}
         onPress={() => {
-          navigate("../editNote");
+          navigate("../createNote");
         }}
       />
       <Button

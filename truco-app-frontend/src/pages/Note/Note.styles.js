@@ -27,6 +27,16 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    position: "absolute",
+    bottom: 5,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
 });
 
 export default styles;
