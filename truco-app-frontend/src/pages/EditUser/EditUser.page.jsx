@@ -58,6 +58,11 @@ const EditUser = () => {
     }
   };
 
+  const handleLogout = () => {
+    setUser({});
+    navigate("../login");
+  };
+
   const handleDeleteUser = () => {
     Alert.alert(
       "Confirmar eliminación",
@@ -213,7 +218,11 @@ const EditUser = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleDeleteUser}>
+        <TouchableOpacity onPress={() => handleLogout()}>
+          <Text style={styles.logout}>Cerrar sesión</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => handleDeleteUser()}>
           <Text style={styles.delete}>Eliminar usuario</Text>
         </TouchableOpacity>
       </View>

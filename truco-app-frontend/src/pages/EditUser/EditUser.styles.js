@@ -50,11 +50,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  logout: {
+    textAlign: "center",
+    color: "red",
+    fontSize: 16,
+  },
   delete: {
-    position: "absolute",
-    bottom: -150,
-    left: 0,
-    right: 0,
     textAlign: "center",
     color: "red",
     fontSize: 16,
