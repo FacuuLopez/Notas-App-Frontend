@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "red",
     fontSize: 16,
+    marginBottom: 200,
   },
   delete: {
     textAlign: "center",
