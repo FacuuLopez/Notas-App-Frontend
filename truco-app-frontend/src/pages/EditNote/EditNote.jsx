@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import * as FileSystem from "expo-file-system";
 import { useNavigate, useLocation } from "react-router";
 import styles from "./EditNote.styles";
 import { UserContext } from "../../context/UserProvider";
@@ -93,7 +92,7 @@ const EditNote = () => {
                 style={styles.input}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={note?.title}
               />
               {errors.title && (
                 <Text style={styles.error}>{errors.title.message}</Text>
@@ -119,7 +118,7 @@ const EditNote = () => {
                 style={styles.inputDescription}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={note?.description}
                 multiline={true}
               />
               {errors.description && (

@@ -3,7 +3,6 @@ import { View, Image, Text, Button } from "react-native";
 import styles from "./Note.styles";
 import { useLocation, useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
-import { ActivityIndicator } from "react-native";
 
 const Note = () => {
   const { user } = useContext(UserContext);
@@ -11,16 +10,6 @@ const Note = () => {
   const location = useLocation();
   const noteReceived = location.state;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleImageLoadStart = () => {
-    setIsLoading(true);
-  };
-
-  const handleImageLoadEnd = () => {
-    console.log(isLoading);
-    setIsLoading(false);
-  };
 
   const handleNavigateOverview = () => {
     navigate("../overview");
