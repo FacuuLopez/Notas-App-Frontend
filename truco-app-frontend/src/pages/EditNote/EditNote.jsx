@@ -82,7 +82,7 @@ const EditNote = () => {
         title: data.title,
         description: data.description,
         userId: note.userId,
-        img: note.img,
+        img: `https://image.pollinations.ai/prompt/${data.title}`,
       };
 
       const filePath = `${FileSystem.documentDirectory}notes.json`;

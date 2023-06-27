@@ -3,6 +3,8 @@ import { View, TextInput, Button, Text } from "react-native";
 import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { UserContext } from "../../context/UserProvider";
+import * as FileSystem from "expo-file-system";
+import uuid from "react-native-uuid";
 import styles from "./NoteForm.styles";
 
 const NoteForm = () => {
@@ -16,7 +18,9 @@ const NoteForm = () => {
 
   const createNote = handleSubmit(async (data) => {
     try {
-      const note = { id: uuid.v4(), userId: user.id, ...data };
+      const date = new Date();
+      const imgPath = `https://image.pollinations.ai/prompt/${data.title}`
+      const note = { id: uuid.v4(), userId: user.id, img: imgPath, date, ...data};
 
       const filePath = `${FileSystem.documentDirectory}notes.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
