@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as FileSystem from "expo-file-system";
 import { useNavigate, useLocation } from "react-router";
 import styles from "./EditNote.styles";
+import { UserContext } from "../../context/UserProvider";
 
 const EditNote = () => {
   const {
@@ -13,7 +14,15 @@ const EditNote = () => {
   } = useForm();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, title, description, userId, img } = location.state;
+  const noteReceived = location.state;
+  const [note, setNote] = useState({
+    id: "",
+    title: "",
+    description: "",
+    userId: "",
+    img: "",
+  });
+  const { user } = useContext(UserContext);
 
   const handleNavigateOverview = () => {
     navigate("../overview");
@@ -39,7 +48,7 @@ const EditNote = () => {
 
   const confirmDeleteNote = async () => {
     try {
-      const noteId = location.state.id;
+      const noteId = note.id;
       const filePath = `${FileSystem.documentDirectory}notes.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
 
@@ -69,11 +78,11 @@ const EditNote = () => {
   const onSubmit = async (data) => {
     try {
       const editedNote = {
-        id,
+        id: note.id,
         title: data.title,
         description: data.description,
-        userId,
-        img,
+        userId: note.userId,
+        img: note.img,
       };
 
       const filePath = `${FileSystem.documentDirectory}notes.json`;
@@ -83,8 +92,8 @@ const EditNote = () => {
         const fileContent = await FileSystem.readAsStringAsync(filePath);
         const notes = JSON.parse(fileContent);
 
-        const updatedNotes = notes.map((note) =>
-          note.id === editedNote.id ? editedNote : note
+        const updatedNotes = notes.map((n) =>
+          n.id === editedNote.id ? editedNote : note
         );
 
         const jsonString = JSON.stringify(updatedNotes);
@@ -99,6 +108,15 @@ const EditNote = () => {
     }
   };
 
+  useEffect(() => {
+    if (!user?.id || !noteReceived?.title) {
+      console.log(user?.id, noteReceived?.title);
+      navigate("../login");
+    } else {
+      setNote({ ...noteReceived });
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Editar nota</Text>
@@ -106,7 +124,7 @@ const EditNote = () => {
         <Controller
           control={control}
           name="title"
-          defaultValue={title}
+          defaultValue={note?.title}
           rules={{
             required: "Título requerido",
             minLength: {
@@ -132,7 +150,7 @@ const EditNote = () => {
         <Controller
           control={control}
           name="description"
-          defaultValue={description}
+          defaultValue={note?.description}
           rules={{
             required: "Descripción requerida",
             minLength: {

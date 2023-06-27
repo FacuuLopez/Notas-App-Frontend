@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -117,6 +117,12 @@ const EditUser = () => {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    if (!user.id) {
+      navigate("../login");
+    }
+  }, []);
 
   return (
     <View style={styles.container}>

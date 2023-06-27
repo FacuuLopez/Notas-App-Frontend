@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { UserContext } from "../../context/UserProvider";
 import { useNavigate } from "react-router";
@@ -15,6 +15,12 @@ const UserProfile = () => {
   const handleNavigateEditUser = () => {
     navigate("../editUser");
   };
+
+  useEffect(() => {
+    if (!user.id) {
+      navigate("../login");
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
