@@ -55,11 +55,13 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
     marginBottom: 20,
+    marginTop: 20,
   },
   delete: {
     textAlign: "center",
     color: "red",
     fontSize: 16,
+    marginTop: 180,
   },
   error: {
     color: "red",

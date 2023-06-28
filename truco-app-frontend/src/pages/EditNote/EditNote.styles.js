@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     flex: 1,
+    textAlignVertical: "top",
   },
   buttonContainer: {
     alignItems: "center",

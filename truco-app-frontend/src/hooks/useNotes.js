@@ -70,15 +70,6 @@ export const useNotes = () => {
 
   const editNote = async (data, callback) => {
     try {
-      const editedNote = {
-        id: note.id,
-        title: data.title,
-        description: data.description,
-        userId: note.userId,
-        date: note.date,
-        img: `https://image.pollinations.ai/prompt/${data.title}`,
-      };
-
       const filePath = `${FileSystem.documentDirectory}notes.json`;
       const fileExists = await FileSystem.getInfoAsync(filePath);
 
@@ -86,9 +77,7 @@ export const useNotes = () => {
         const fileContent = await FileSystem.readAsStringAsync(filePath);
         const notes = JSON.parse(fileContent);
 
-        const updatedNotes = notes.map((n) =>
-          n.id === editedNote.id ? editedNote : note
-        );
+        const updatedNotes = notes.map((n) => (n.id === data.id ? data : note));
 
         const jsonString = JSON.stringify(updatedNotes);
         await FileSystem.writeAsStringAsync(filePath, jsonString);

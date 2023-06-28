@@ -1,10 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router";
 import styles from "./EditNote.styles";
 import { UserContext } from "../../context/UserProvider";
 import { useNotes } from "../../hooks/useNotes";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const EditNote = () => {
   const {
@@ -55,15 +63,24 @@ const EditNote = () => {
       navigate("../overview");
     });
 
-  const onSubmit = async (data) =>
-    editNote(data, () => {
+  const onSubmit = async (data) => {
+    const editedNote = {
+      id: note.id,
+      title: data.title,
+      description: data.description,
+      userId: note.userId,
+      date: note.date,
+      img: `https://image.pollinations.ai/prompt/${data.title}`,
+    };
+
+    editNote(editedNote, () => {
       alert("Nota actualizada exitosamente");
       navigate("../overview");
     });
+  };
 
   useEffect(() => {
     if (!user?.id || !noteReceived?.title) {
-      console.log(user?.id, noteReceived?.title);
       navigate("../login");
     } else {
       setNote({ ...noteReceived });
@@ -71,80 +88,93 @@ const EditNote = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Editar nota</Text>
-      <View style={styles.formContainer}>
-        <Controller
-          control={control}
-          name="title"
-          defaultValue={note?.title}
-          rules={{
-            required: "Título requerido",
-            minLength: {
-              value: 5,
-              message: "El campo debe tener al menos 5 caracteres",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Título</Text>
-              <TextInput
-                style={styles.input}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="always"
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.heading}>Editar nota</Text>
+        <View style={styles.formContainer}>
+          {note.title ? (
+            <>
+              <Controller
+                control={control}
+                name="title"
+                defaultValue={note.title}
+                rules={{
+                  required: "Título requerido",
+                  minLength: {
+                    value: 5,
+                    message: "El campo debe tener al menos 5 caracteres",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Título</Text>
+                    <TextInput
+                      style={styles.input}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                    {errors.title && (
+                      <Text style={styles.error}>{errors.title.message}</Text>
+                    )}
+                  </View>
+                )}
               />
-              {errors.title && (
-                <Text style={styles.error}>{errors.title.message}</Text>
-              )}
-            </View>
-          )}
-        />
-        <Controller
-          control={control}
-          name="description"
-          defaultValue={note?.description}
-          rules={{
-            required: "Descripción requerida",
-            minLength: {
-              value: 5,
-              message: "El campo debe tener al menos 5 caracteres",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View style={styles.inputContainerDescription}>
-              <Text style={styles.label}>Descripción</Text>
-              <TextInput
-                style={styles.inputDescription}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                multiline={true}
+              <Controller
+                control={control}
+                name="description"
+                defaultValue={note.description}
+                rules={{
+                  required: "Descripción requerida",
+                  minLength: {
+                    value: 5,
+                    message: "El campo debe tener al menos 5 caracteres",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View style={styles.inputContainerDescription}>
+                    <Text style={styles.label}>Descripción</Text>
+                    <TextInput
+                      style={styles.inputDescription}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      multiline={true}
+                    />
+                    {errors.description && (
+                      <Text style={styles.error}>
+                        {errors.description.message}
+                      </Text>
+                    )}
+                  </View>
+                )}
               />
-              {errors.description && (
-                <Text style={styles.error}>{errors.description.message}</Text>
-              )}
-            </View>
+            </>
+          ) : (
+            <ActivityIndicator size="large" color="#0000ff" />
           )}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}
-        >
-          <Text style={styles.buttonText}>Guardar cambios</Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text style={styles.buttonText}>Guardar cambios</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleNavigateOverview}>
-          <Text style={styles.textSecondary}>Cancelar</Text>
+          <TouchableOpacity onPress={handleNavigateOverview}>
+            <Text style={styles.textSecondary}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={handleDeleteNote}>
+          <Text style={styles.delete}>Eliminar nota</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity onPress={handleDeleteNote}>
-        <Text style={styles.delete}>Eliminar nota</Text>
-      </TouchableOpacity>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
