@@ -92,7 +92,7 @@ const EditNote = () => {
                 style={styles.input}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={note?.title}
+                value={value}
               />
               {errors.title && (
                 <Text style={styles.error}>{errors.title.message}</Text>
@@ -118,7 +118,7 @@ const EditNote = () => {
                 style={styles.inputDescription}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={note?.description}
+                value={value}
                 multiline={true}
               />
               {errors.description && (

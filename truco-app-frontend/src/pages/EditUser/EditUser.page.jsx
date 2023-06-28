@@ -1,12 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as FileSystem from "expo-file-system";
 import { UserContext } from "../../context/UserProvider";

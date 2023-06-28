@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Button, Text, TouchableOpacity, FlatList } from "react-native";
 import { useNavigate } from "react-router-native";
-import { UserContext } from "../../context/UserProvider";
 import { useNotes } from "../../hooks/useNotes";
 import styles from "./Overview.styles";
 
