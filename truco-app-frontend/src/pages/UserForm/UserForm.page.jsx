@@ -14,70 +14,11 @@ const UserForm = ({ isRegister }) => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { login, register } = useContext(UserContext);
 
-  const handleRegister = handleSubmit(async (data) => {
-    try {
-      const user = { id: uuid.v4(), ...data };
+  const handleRegister = handleSubmit(register);
 
-      const filePath = `${FileSystem.documentDirectory}users.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      let users = [];
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        users = JSON.parse(fileContent);
-      }
-
-      const existingUser = users.find(
-        (existingUser) =>
-          existingUser.username === user.username ||
-          existingUser.email === user.email
-      );
-
-      if (existingUser) {
-        alert("El nombre de usuario o email ya existen");
-        return;
-      }
-
-      users.push(user);
-
-      const jsonString = JSON.stringify(users);
-      await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-      navigate("../login");
-    } catch (e) {
-      console.log(e);
-    }
-  });
-
-  const handleLogin = handleSubmit(async (data) => {
-    try {
-      const { email, password } = data;
-
-      const filePath = `${FileSystem.documentDirectory}users.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const users = JSON.parse(fileContent);
-
-        const foundUser = users.find(
-          (user) => user.email === email && user.password === password
-        );
-
-        if (foundUser) {
-          setUser(foundUser);
-          navigate("../overview");
-        } else {
-          alert("Credenciales inválidas");
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  const handleLogin = handleSubmit(login);
 
   const handleFormSubmit = isRegister ? handleRegister : handleLogin;
 

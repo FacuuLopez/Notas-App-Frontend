@@ -8,7 +8,8 @@ import { useNavigate } from "react-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const EditUser = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, logout, deleteCurrentUser, editCurrentUser } =
+    useContext(UserContext);
   const {
     control,
     handleSubmit,
@@ -24,39 +25,6 @@ const EditUser = () => {
     navigate("../profile");
   };
 
-  const confirmDeleteUser = async () => {
-    try {
-      const filePath = `${FileSystem.documentDirectory}users.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        let users = JSON.parse(fileContent);
-
-        const newUsers = users.filter((u) => u.id !== user.id);
-
-        if (newUsers.length < users.length) {
-          const jsonString = JSON.stringify(newUsers);
-          await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-          alert("Perfil eliminado exitosamente");
-
-          navigate("../login");
-        } else {
-          alert("No es posible eliminar el usuario");
-          return;
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleLogout = () => {
-    setUser({});
-    navigate("../login");
-  };
-
   const handleDeleteUser = () => {
     Alert.alert(
       "Confirmar eliminación",
@@ -69,52 +37,10 @@ const EditUser = () => {
         {
           text: "Eliminar",
           style: "destructive",
-          onPress: confirmDeleteUser,
+          onPress: deleteCurrentUser,
         },
       ]
     );
-  };
-
-  const onSubmit = async (data) => {
-    try {
-      const filePath = `${FileSystem.documentDirectory}users.json`;
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        const users = JSON.parse(fileContent);
-
-        const existingUser = users.find(
-          (existingUser) =>
-            (existingUser.email === data.email &&
-              existingUser.email !== user.email) ||
-            (existingUser.username === data.username &&
-              existingUser.username !== user.username)
-        );
-
-        if (existingUser) {
-          alert("El correo electronico o nombre de usuario ya existen");
-          return;
-        }
-
-        const updatedUser = { ...user, ...data };
-
-        const updatedUsers = users.map((existingUser) =>
-          existingUser.id === updatedUser.id ? updatedUser : existingUser
-        );
-
-        const jsonString = JSON.stringify(updatedUsers);
-        await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-        setUser(updatedUser);
-
-        alert("Perfil actualizado exitosamente");
-
-        handleNavigateProfile();
-      }
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   useEffect(() => {
@@ -206,7 +132,7 @@ const EditUser = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={handleSubmit(onSubmit)}
+              onPress={handleSubmit(editCurrentUser)}
             >
               <Text style={styles.buttonText}>Guardar cambios</Text>
             </TouchableOpacity>
@@ -216,7 +142,7 @@ const EditUser = () => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={() => handleLogout()}>
+          <TouchableOpacity onPress={() => logout()}>
             <Text style={styles.logout}>Cerrar sesión</Text>
           </TouchableOpacity>
 
