@@ -75,6 +75,7 @@ export const UserProvider = ({ children }) => {
 
           alert("Perfil eliminado exitosamente");
 
+          AsyncStorage.setItem("userId", null);
           navigate("../login");
         } else {
           alert("No es posible eliminar el usuario");
@@ -171,7 +172,6 @@ export const UserProvider = ({ children }) => {
         user,
         login,
         logout,
-        getUsers,
         editCurrentUser,
         deleteCurrentUser,
         register,
