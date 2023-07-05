@@ -1,29 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Image, Text, Button, ActivityIndicator } from "react-native";
 import styles from "./Note.styles";
-import { useLocation, useNavigate } from "react-router-native";
 import { UserContext } from "../../context/UserProvider";
 
-const Note = () => {
+const Note = ({ route, navigation }) => {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const noteReceived = location.state;
+  const noteReceived = route.params;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
 
   const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   const handleNavigateOverview = () => {
-    navigate("../overview");
+    navigation.navigate("overview");
   };
 
   const handleNavigateEditNote = () => {
-    navigate("../editNote", { state: note });
+    navigation.navigate("editNote", note);
   };
 
   useEffect(() => {
     if (!user?.id || !noteReceived?.title) {
-      navigate("../login");
+      navigation.navigate("login");
     } else {
       setNote({ ...noteReceived });
     }

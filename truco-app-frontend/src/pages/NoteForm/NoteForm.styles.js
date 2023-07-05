@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 50,
   },
   titleInput: {
     borderWidth: 1,
@@ -20,6 +21,9 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   buttonContainer: {
+    marginTop: 30,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
   },

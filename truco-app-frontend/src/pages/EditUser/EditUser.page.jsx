@@ -4,24 +4,22 @@ import { useForm, Controller } from "react-hook-form";
 import * as FileSystem from "expo-file-system";
 import { UserContext } from "../../context/UserProvider";
 import styles from "./EditUser.styles";
-import { useNavigate } from "react-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const EditUser = () => {
+const EditUser = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
 
   const handleNavigateOverview = () => {
-    navigate("../overview");
+    navigation.navigate("overview");
   };
 
   const handleNavigateProfile = () => {
-    navigate("../profile");
+    navigation.navigate("profile");
   };
 
   const confirmDeleteUser = async () => {
@@ -41,7 +39,7 @@ const EditUser = () => {
 
           alert("Perfil eliminado exitosamente");
 
-          navigate("../login");
+          navigation.navigate("login");
         } else {
           alert("No es posible eliminar el usuario");
           return;
@@ -54,7 +52,7 @@ const EditUser = () => {
 
   const handleLogout = () => {
     setUser({});
-    navigate("../login");
+    navigation.navigate("login");
   };
 
   const handleDeleteUser = () => {
@@ -119,7 +117,7 @@ const EditUser = () => {
 
   useEffect(() => {
     if (!user.id) {
-      navigate("../login");
+      navigation.navigate("login");
     }
   }, []);
 

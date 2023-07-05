@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { UserContext } from "../../context/UserProvider";
-import { useNavigate } from "react-router";
 import axios from "axios";
 import styles from "./UserProfile.styles";
 import { ActivityIndicator } from "react-native";
 
-const UserProfile = () => {
+const UserProfile = ({ navigation }) => {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
   const [avatar, setAvatar] = useState("");
 
   const handleNavigateOverview = () => {
-    navigate("../overview");
+    navigation.navigate("overview");
   };
 
   const handleNavigateEditUser = () => {
-    navigate("../editUser");
+    navigation.navigate("editUser");
   };
 
   const fetchAvatar = async () => {
@@ -31,7 +29,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (!user.id) {
-      navigate("../login");
+      navigation.navigate("login");
     } else {
       fetchAvatar();
     }

@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 8,
     padding: 16,
+    paddingTop: 50,
     marginBottom: 16,
     height: "100%",
     shadowColor: "black",
@@ -17,12 +18,12 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     height: 200,
+    marginBottom: 16,
   },
   image: {
     width: "100%",
     height: 200,
     borderRadius: 8,
-    marginBottom: 16,
   },
   imageLoader: {
     position: "absolute",
@@ -46,8 +47,8 @@ const styles = StyleSheet.create({
     bottom: 5,
     left: 0,
     right: 0,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
+    paddingHorizontal: 30,
+    paddingBottom: 30,
   },
 });
 

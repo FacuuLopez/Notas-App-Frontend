@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,11 +46,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingVertical: 2,
     borderRadius: 5,
-  },
-  textHasAnAccount: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    backgroundColor: "red",
   },
   error: {
     color: "red",

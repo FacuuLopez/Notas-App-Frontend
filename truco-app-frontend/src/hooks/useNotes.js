@@ -2,18 +2,11 @@ import { useState, useContext, useEffect } from "react";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { UserContext } from "../context/UserProvider";
+import EventEmitter from "../services/EventEmitter";
 
 export const useNotes = () => {
   const [allNotes, setAllNotes] = useState([]);
   const { user } = useContext(UserContext);
-
-  useEffect(() => {
-    if (!user.id) {
-      navigate("../login");
-    } else {
-      getNotesById(user.id);
-    }
-  }, [user]);
 
   const getNotesById = async (id) => {
     try {
@@ -36,7 +29,7 @@ export const useNotes = () => {
     }
   };
 
-  const createNote = async (data, callback) => {
+  const createNote = async (data) => {
     const date = new Date();
     try {
       const note = {
@@ -61,8 +54,7 @@ export const useNotes = () => {
 
       const jsonString = JSON.stringify(notes);
       await FileSystem.writeAsStringAsync(filePath, jsonString);
-
-      callback();
+      EventEmitter.emit("noteState");
     } catch (e) {
       console.log(e);
     }
@@ -77,11 +69,12 @@ export const useNotes = () => {
         const fileContent = await FileSystem.readAsStringAsync(filePath);
         const notes = JSON.parse(fileContent);
 
-        const updatedNotes = notes.map((n) => (n.id === data.id ? data : note));
+        const updatedNotes = notes.map((n) => (n.id === data.id ? data : n));
 
         const jsonString = JSON.stringify(updatedNotes);
         await FileSystem.writeAsStringAsync(filePath, jsonString);
 
+        EventEmitter.emit("noteState");
         callback();
       }
     } catch (e) {
@@ -104,6 +97,7 @@ export const useNotes = () => {
           const jsonString = JSON.stringify(newNotes);
           await FileSystem.writeAsStringAsync(filePath, jsonString);
 
+          EventEmitter.emit("noteState");
           callback();
         } else {
           alert("No es posible eliminar la nota");

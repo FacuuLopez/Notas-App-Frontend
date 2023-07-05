@@ -8,21 +8,19 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router";
 import styles from "./EditNote.styles";
 import { UserContext } from "../../context/UserProvider";
 import { useNotes } from "../../hooks/useNotes";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const EditNote = () => {
+const EditNote = ({ route, navigation }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const noteReceived = location.state;
+
+  const noteReceived = route.params;
   const [note, setNote] = useState({
     id: "",
     title: "",
@@ -36,7 +34,7 @@ const EditNote = () => {
   const { editNote, deleteNote } = useNotes();
 
   const handleNavigateOverview = () => {
-    navigate("../overview");
+    navigation.navigate("overview");
   };
 
   const handleDeleteNote = () => {
@@ -60,7 +58,7 @@ const EditNote = () => {
   const confirmDeleteNote = async () =>
     deleteNote(note.id, () => {
       alert("Nota eliminada exitosamente");
-      navigate("../overview");
+      navigation.navigate("overview");
     });
 
   const onSubmit = async (data) => {
@@ -72,16 +70,16 @@ const EditNote = () => {
       date: note.date,
       img: `https://image.pollinations.ai/prompt/${data.title}`,
     };
-
+    console.log("pepe");
     editNote(editedNote, () => {
       alert("Nota actualizada exitosamente");
-      navigate("../overview");
+      navigation.navigate("overview");
     });
   };
 
   useEffect(() => {
     if (!user?.id || !noteReceived?.title) {
-      navigate("../login");
+      navigation.navigate("login");
     } else {
       setNote({ ...noteReceived });
     }
@@ -90,7 +88,7 @@ const EditNote = () => {
   return (
     <KeyboardAwareScrollView
       keyboardShouldPersistTaps="always"
-      style={{ flex: 1 }}
+      contentContainerStyle={{ flex: 1 }}
     >
       <View style={styles.container}>
         <Text style={styles.heading}>Editar nota</Text>

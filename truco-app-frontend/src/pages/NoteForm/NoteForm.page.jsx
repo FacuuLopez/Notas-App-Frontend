@@ -1,33 +1,32 @@
 import React, { useContext, useEffect } from "react";
 import { View, TextInput, Button, Text } from "react-native";
-import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { UserContext } from "../../context/UserProvider";
 import styles from "./NoteForm.styles";
 import { useNotes } from "../../hooks/useNotes";
 
-const NoteForm = () => {
+const NoteForm = ({ navigation }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const { createNote } = useNotes();
 
-  const submitNote = handleSubmit(async (data) =>
-    createNote(data, () => navigate("../overview"))
-  );
+  const submitNote = handleSubmit(async (data) => {
+    createNote(data);
+    navigation.navigate("overview");
+  });
 
   const handleCancel = () => {
-    navigate("../overview");
+    navigation.navigate("overview");
   };
 
   useEffect(() => {
     if (!user.id) {
-      navigate("../login");
+      navigation.navigate("login");
     }
   }, []);
 

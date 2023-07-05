@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Button } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { Link, useNavigate } from "react-router-native";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { UserContext } from "../../context/UserProvider";
 import styles from "./UserForm.styles";
 
-const UserForm = ({ isRegister }) => {
+const UserForm = ({ route, navigation }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
+
+  const { isRegister } = route.params;
   const { setUser } = useContext(UserContext);
 
   const handleRegister = handleSubmit(async (data) => {
@@ -46,7 +46,7 @@ const UserForm = ({ isRegister }) => {
       const jsonString = JSON.stringify(users);
       await FileSystem.writeAsStringAsync(filePath, jsonString);
 
-      navigate("../login");
+      navigation.navigate("login");
     } catch (e) {
       console.log(e);
     }
@@ -69,7 +69,7 @@ const UserForm = ({ isRegister }) => {
 
         if (foundUser) {
           setUser(foundUser);
-          navigate("../overview");
+          navigation.navigate("overview");
         } else {
           alert("Credenciales inválidas");
         }
@@ -189,15 +189,19 @@ const UserForm = ({ isRegister }) => {
             </Text>
           </TouchableOpacity>
 
-          <Link
-            style={styles.hasAnAccount}
-            to={isRegister ? "../login" : "../register"}
-            underlayColor="#ccc"
-          >
-            <Text style={styles.textHasAnAccount}>
-              {isRegister ? "¿Ya tienes una cuenta?" : "¿Aún no tienes cuenta?"}
-            </Text>
-          </Link>
+          {isRegister ? (
+            <Button
+              title={"¿Ya tienes una cuenta?"}
+              style={styles.hasAnAccount}
+              onPress={() => navigation.navigate("login")}
+            />
+          ) : (
+            <Button
+              title={"¿Aún no tienes cuenta?"}
+              style={styles.hasAnAccount}
+              onPress={() => navigation.navigate("register")}
+            />
+          )}
         </View>
       </View>
     </View>

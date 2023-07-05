@@ -1,24 +1,43 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Button, Text, TouchableOpacity, FlatList } from "react-native";
-import { useNavigate } from "react-router-native";
 import { useNotes } from "../../hooks/useNotes";
 import styles from "./Overview.styles";
+import { UserContext } from "../../context/UserProvider";
+import EventEmitter from "../../services/EventEmitter";
 
-const Overview = () => {
-  const navigate = useNavigate();
-  const { allNotes } = useNotes();
+const Overview = ({ navigation }) => {
+  const { allNotes, getNotesById } = useNotes();
+  const { user } = useContext(UserContext);
 
   const handleNavigateCreateNote = () => {
-    navigate("../createNote");
+    navigation.navigate("noteForm");
   };
 
   const handleNavigateProfile = () => {
-    navigate("../profile");
+    navigation.navigate("profile");
   };
+
+  useEffect(() => {
+    if (!user.id) {
+      navigation.navigate("login");
+    } else {
+      getNotesById(user.id);
+    }
+
+    const handleNoteCreated = () => {
+      getNotesById(user.id);
+    };
+
+    EventEmitter.on("noteState", handleNoteCreated);
+
+    return () => {
+      EventEmitter.off("noteState", handleNoteCreated);
+    };
+  }, []);
 
   const renderItem = ({ item }) => {
     const handleViewNote = () => {
-      navigate("../note", { state: item });
+      navigation.navigate("note", item);
     };
 
     return (
