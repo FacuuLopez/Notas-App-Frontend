@@ -42,11 +42,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
+  textButtonSecondary: {
+    fontSize: 16,
+    color: "#2196F3",
+  },
   hasAnAccount: {
     marginHorizontal: 20,
     paddingVertical: 2,
     borderRadius: 5,
-    backgroundColor: "red",
+    alignItems: "center",
   },
   error: {
     color: "red",

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Image, Text, Button, ActivityIndicator } from "react-native";
 import styles from "./Note.styles";
-import { UserContext } from "../../context/UserProvider";
+import userContext from "../../context/userContext";
 
-const Note = ({ route, navigation }) => {
-  const { user } = useContext(UserContext);
+export const Note = ({ route, navigation }) => {
+  const { user } = useContext(userContext);
   const noteReceived = route.params;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
 
@@ -19,9 +19,7 @@ const Note = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    if (!user?.id || !noteReceived?.title) {
-      navigation.navigate("login");
-    } else {
+    if (user?.id && noteReceived?.title) {
       setNote({ ...noteReceived });
     }
   }, []);
@@ -55,5 +53,3 @@ const Note = ({ route, navigation }) => {
     </View>
   );
 };
-
-export default Note;

@@ -3,10 +3,11 @@ import { Text, View, TextInput, TouchableOpacity, Button } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
-import { UserContext } from "../../context/UserProvider";
+import Storage from "../../services/asyncStorage";
 import styles from "./UserForm.styles";
+import userContext from "../../context/userContext";
 
-const UserForm = ({ route, navigation }) => {
+export const UserForm = ({ route, navigation }) => {
   const {
     control,
     handleSubmit,
@@ -14,7 +15,7 @@ const UserForm = ({ route, navigation }) => {
   } = useForm();
 
   const { isRegister } = route.params;
-  const { setUser } = useContext(UserContext);
+  const { setUser } = useContext(userContext);
 
   const handleRegister = handleSubmit(async (data) => {
     try {
@@ -69,6 +70,7 @@ const UserForm = ({ route, navigation }) => {
 
         if (foundUser) {
           setUser(foundUser);
+          Storage.storeData("authData", JSON.stringify(foundUser));
           navigation.navigate("overview");
         } else {
           alert("Credenciales inválidas");
@@ -189,23 +191,18 @@ const UserForm = ({ route, navigation }) => {
             </Text>
           </TouchableOpacity>
 
-          {isRegister ? (
-            <Button
-              title={"¿Ya tienes una cuenta?"}
-              style={styles.hasAnAccount}
-              onPress={() => navigation.navigate("login")}
-            />
-          ) : (
-            <Button
-              title={"¿Aún no tienes cuenta?"}
-              style={styles.hasAnAccount}
-              onPress={() => navigation.navigate("register")}
-            />
-          )}
+          <TouchableOpacity
+            style={[styles.hasAnAccount, { marginTop: 10 }]}
+            onPress={() =>
+              navigation.navigate(isRegister ? "login" : "register")
+            }
+          >
+            <Text style={styles.textButtonSecondary}>
+              {isRegister ? "¿Ya tienes una cuenta?" : "¿Aún no tienes cuenta?"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
-
-export default UserForm;

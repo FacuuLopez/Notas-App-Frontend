@@ -1,12 +1,12 @@
 import { useState, useContext, useEffect } from "react";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
-import { UserContext } from "../context/UserProvider";
 import EventEmitter from "../services/EventEmitter";
+import userContext from "../context/userContext";
 
 export const useNotes = () => {
   const [allNotes, setAllNotes] = useState([]);
-  const { user } = useContext(UserContext);
+  const { user } = useContext(userContext);
 
   const getNotesById = async (id) => {
     try {

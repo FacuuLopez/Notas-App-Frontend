@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./EditNote.styles";
-import { UserContext } from "../../context/UserProvider";
+import userContext from "../../context/userContext";
 import { useNotes } from "../../hooks/useNotes";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const EditNote = ({ route, navigation }) => {
+export const EditNote = ({ route, navigation }) => {
   const {
     control,
     handleSubmit,
@@ -29,7 +29,7 @@ const EditNote = ({ route, navigation }) => {
     img: "",
     date: "",
   });
-  const { user } = useContext(UserContext);
+  const { user } = useContext(userContext);
 
   const { editNote, deleteNote } = useNotes();
 
@@ -70,7 +70,7 @@ const EditNote = ({ route, navigation }) => {
       date: note.date,
       img: `https://image.pollinations.ai/prompt/${data.title}`,
     };
-    console.log("pepe");
+
     editNote(editedNote, () => {
       alert("Nota actualizada exitosamente");
       navigation.navigate("overview");
@@ -78,9 +78,7 @@ const EditNote = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    if (!user?.id || !noteReceived?.title) {
-      navigation.navigate("login");
-    } else {
+    if (user?.id && noteReceived?.title) {
       setNote({ ...noteReceived });
     }
   }, []);
@@ -175,5 +173,3 @@ const EditNote = ({ route, navigation }) => {
     </KeyboardAwareScrollView>
   );
 };
-
-export default EditNote;

@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as FileSystem from "expo-file-system";
-import { UserContext } from "../../context/UserProvider";
 import styles from "./EditUser.styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import userContext, { defaultUser } from "../../context/userContext";
 
-const EditUser = ({ navigation }) => {
-  const { user, setUser } = useContext(UserContext);
+export const EditUser = ({ navigation }) => {
+  const { user, setUser } = useContext(userContext);
   const {
     control,
     handleSubmit,
@@ -39,7 +39,7 @@ const EditUser = ({ navigation }) => {
 
           alert("Perfil eliminado exitosamente");
 
-          navigation.navigate("login");
+          setUser(defaultUser);
         } else {
           alert("No es posible eliminar el usuario");
           return;
@@ -51,8 +51,7 @@ const EditUser = ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    setUser({});
-    navigation.navigate("login");
+    setUser(defaultUser);
   };
 
   const handleDeleteUser = () => {
@@ -114,12 +113,6 @@ const EditUser = ({ navigation }) => {
       console.log(e);
     }
   };
-
-  useEffect(() => {
-    if (!user.id) {
-      navigation.navigate("login");
-    }
-  }, []);
 
   return (
     <KeyboardAwareScrollView
@@ -226,5 +219,3 @@ const EditUser = ({ navigation }) => {
     </KeyboardAwareScrollView>
   );
 };
-
-export default EditUser;

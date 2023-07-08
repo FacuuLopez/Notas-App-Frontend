@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from "react";
 import { View, Button, Text, TouchableOpacity, FlatList } from "react-native";
 import { useNotes } from "../../hooks/useNotes";
 import styles from "./Overview.styles";
-import { UserContext } from "../../context/UserProvider";
 import EventEmitter from "../../services/EventEmitter";
+import userContext from "../../context/userContext";
 
-const Overview = ({ navigation }) => {
+export const Overview = ({ navigation }) => {
   const { allNotes, getNotesById } = useNotes();
-  const { user } = useContext(UserContext);
+  const { user } = useContext(userContext);
 
   const handleNavigateCreateNote = () => {
     navigation.navigate("noteForm");
@@ -18,9 +18,7 @@ const Overview = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!user.id) {
-      navigation.navigate("login");
-    } else {
+    if (user.id) {
       getNotesById(user.id);
     }
 
@@ -88,5 +86,3 @@ const Overview = ({ navigation }) => {
     </View>
   );
 };
-
-export default Overview;
