@@ -8,6 +8,7 @@ import userContext from "../../context/userContext";
 export const UserProfile = ({ navigation }) => {
   const { user } = useContext(userContext);
   const [avatar, setAvatar] = useState("");
+  const color = Platform.OS === "android" ? "#2196F3" : "#007AFF";
 
   const handleNavigateOverview = () => {
     navigation.navigate("overview");
@@ -40,7 +41,7 @@ export const UserProfile = ({ navigation }) => {
         {avatar ? (
           <Image source={{ uri: avatar }} style={styles.avatar} />
         ) : (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color={color} />
         )}
         <Text style={styles.label}>Username: {user.username}</Text>
         <Text style={styles.label}>Email: {user.email}</Text>

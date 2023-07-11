@@ -13,10 +13,12 @@ import {
   EditNote,
   UserForm,
 } from "./src/pages/index";
+import Welcome from "./src/components/Welcome/Welcome.component";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const [user, setUser] = useState(defaultUser);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   async function unlockOrientation() {
     await ScreenOrientation.unlockAsync();
@@ -27,14 +29,20 @@ export default function App() {
     Storage.getData("authData")
       .then((data) => JSON.parse(data))
       .then((data) => setUser(data))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   useEffect(() => {
     if (user.id) {
-      Storage.storeData("authData", JSON.stringify(user));
+      Storage.storeData("authData", JSON.stringify(user))
+        .then(() => setIsLoaded(true))
+        .catch((error) => console.log(error));
     } else {
-      Storage.clearAll();
+      Storage.clearAll()
+        .then(() => setIsLoaded(true))
+        .catch((error) => console.log(error));
     }
   }, [user]);
 
@@ -46,28 +54,32 @@ export default function App() {
             headerShown: false,
           }}
         >
-          {user.id ? (
-            <>
-              <Stack.Screen name="overview" component={Overview} />
-              <Stack.Screen name="note" component={Note} />
-              <Stack.Screen name="noteForm" component={NoteForm} />
-              <Stack.Screen name="profile" component={UserProfile} />
-              <Stack.Screen name="editUser" component={EditUser} />
-              <Stack.Screen name="editNote" component={EditNote} />
-            </>
+          {isLoaded ? (
+            user.id ? (
+              <>
+                <Stack.Screen name="overview" component={Overview} />
+                <Stack.Screen name="note" component={Note} />
+                <Stack.Screen name="noteForm" component={NoteForm} />
+                <Stack.Screen name="profile" component={UserProfile} />
+                <Stack.Screen name="editUser" component={EditUser} />
+                <Stack.Screen name="editNote" component={EditNote} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen
+                  name="login"
+                  component={UserForm}
+                  initialParams={{ isRegister: false }}
+                />
+                <Stack.Screen
+                  name="register"
+                  component={UserForm}
+                  initialParams={{ isRegister: true }}
+                />
+              </>
+            )
           ) : (
-            <>
-              <Stack.Screen
-                name="login"
-                component={UserForm}
-                initialParams={{ isRegister: false }}
-              />
-              <Stack.Screen
-                name="register"
-                component={UserForm}
-                initialParams={{ isRegister: true }}
-              />
-            </>
+            <Stack.Screen name="welcome" component={Welcome} />
           )}
         </Stack.Navigator>
       </NavigationContainer>

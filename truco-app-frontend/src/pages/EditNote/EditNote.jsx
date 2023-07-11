@@ -19,6 +19,7 @@ export const EditNote = ({ route, navigation }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const color = Platform.OS === "android" ? "#2196F3" : "#007AFF";
 
   const noteReceived = route.params;
   const [note, setNote] = useState({
@@ -150,7 +151,7 @@ export const EditNote = ({ route, navigation }) => {
               />
             </>
           ) : (
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="large" color={color} />
           )}
         </View>
         <View style={styles.buttonContainer}>

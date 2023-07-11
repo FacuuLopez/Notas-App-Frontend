@@ -7,6 +7,7 @@ export const Note = ({ route, navigation }) => {
   const { user } = useContext(userContext);
   const noteReceived = route.params;
   const [note, setNote] = useState({ title: "", description: "", img: "" });
+  const color = Platform.OS === "android" ? "#2196F3" : "#007AFF";
 
   const [isLoadingImage, setIsLoadingImage] = useState(false);
 
@@ -29,7 +30,7 @@ export const Note = ({ route, navigation }) => {
       <View style={styles.imageContainer}>
         {isLoadingImage ? (
           <View style={styles.imageLoader}>
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="large" color={color} />
           </View>
         ) : (
           <></>
