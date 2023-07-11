@@ -50,6 +50,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 30,
   },
+  descriptionContainer: {
+    maxHeight: 420,
+    marginBottom: 16,
+  },
 });
 
 export default styles;

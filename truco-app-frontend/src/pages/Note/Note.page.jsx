@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Image, Text, Button, ActivityIndicator } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  Button,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import styles from "./Note.styles";
 import userContext from "../../context/userContext";
 
@@ -46,7 +53,10 @@ export const Note = ({ route, navigation }) => {
       </View>
 
       <Text style={styles.title}>{note?.title}</Text>
-      <Text style={styles.description}>{note?.description}</Text>
+      <ScrollView style={styles.descriptionContainer}>
+        <Text style={styles.description}>{note?.description}</Text>
+      </ScrollView>
+
       <View style={styles.buttonContainer}>
         <Button title="Notas" onPress={handleNavigateOverview} />
         <Button title="Editar" onPress={handleNavigateEditNote} />

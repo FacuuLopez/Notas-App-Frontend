@@ -41,7 +41,13 @@ export const Overview = ({ navigation }) => {
     return (
       <TouchableOpacity style={styles.noteContainer} onPress={handleViewNote}>
         <Text style={styles.noteTitle}>{item.title}</Text>
-        <Text style={styles.noteDescription}>{item.description}</Text>
+        <Text
+          style={styles.noteDescription}
+          numberOfLines={3}
+          ellipsizeMode="tail"
+        >
+          {item.description}
+        </Text>
         <Text style={styles.noteDate}>{item.date}</Text>
         <Button
           title="Ver nota"
